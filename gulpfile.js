@@ -7,7 +7,7 @@ var stylish = require('jshint-stylish');
 
 var browserSync = require('browser-sync');
 
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DEFAULT FOR 'gulp' COMMAND
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -39,7 +39,7 @@ gulp.task('serve',   function () {
         // Note: this uses an unsigned certificate which on first access
         //       will present a certificate warning in the browser.
         // https: true,
-        startPath: "/air-cascade-validator/demo/index.html",
+        startPath: "/earth-editable-layout/demo/index.html",
         server: {
             baseDir: ['../.'],
             directory: true
