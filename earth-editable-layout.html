@@ -25,23 +25,19 @@ The `earth-editable-layout` provides layout for edition
         }
     </style>
     <template>
+        <paper-header-panel class="flex">
 
-
-
-        <paper-header-panel class="main" main mode="waterfall">
-
-            <!-- Main Toolbar -->
+            <!-- Header Toolbar -->
             <paper-toolbar>
-                <paper-icon-button icon="arrow-back"  on-tap="{{onBack}}"></paper-icon-button>
-                <div class="title">Title</div>
-                <paper-icon-button icon="save" on-tap="moreAction"></paper-icon-button>
-                <paper-icon-button icon="refresh"></paper-icon-button>
-                <paper-icon-button icon="add" on-tap="moreAction">+</paper-icon-button>
-
+                <paper-icon-button icon="arrow-back"  on-tap="onBack"></paper-icon-button>
+                <div class="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
+                <paper-icon-button icon="check" disabled?="{{!status.toSave}}" on-tap="onSave"></paper-icon-button>
+                <paper-icon-button icon="delete" on-tap="moreAction"></paper-icon-button>
                 <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
             </paper-toolbar>
 
-            <div class="content">
+            <!-- Main Content -->
+            <div class="content fit">
                 <content></content>
             </div>
         </paper-header-panel>
