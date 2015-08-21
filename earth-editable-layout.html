@@ -63,6 +63,41 @@ The `earth-editable-layout` provides layout for edition
 
             properties: {},
 
+            listeners: {
+                'air-cruddy-element-register': '_registerCruddyElement',
+                'air-cruddy-element-unregister': '_unregisterCruddyElement'
+            },
+
+            // --- Life Cycle
+            // --- ---------------------------
+            ready: function () {
+                // Holds all the custom elements registered with this form.
+                this._cruddyElements = [];
+            },
+
+
+            // --- Node Watcher
+            // --- ---------------------------
+            _registerCruddyElement: function (e) {
+                // ??   e.target._parentForm = this;
+                if (this !== e.target) {
+                    this._cruddyElements.push(e.target);
+                }
+            },
+
+            _unregisterCruddyElement: function(e) {
+                var target = e.detail.target;
+                if (target) {
+                    var index = this._cruddyElements.indexOf(target);
+                    if (index > -1) {
+                        this._cruddyElements.splice(index, 1);
+                    }
+                }
+            },
+
+            // --- Action
+            // --- ---------------------------
+
             onSave: function (event) {
 
             },
