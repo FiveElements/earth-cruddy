@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 
-var browserSync = require('browser-sync');
+var browserSync = require('browser-sync').create();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DEFAULT FOR 'gulp' COMMAND
@@ -33,7 +33,7 @@ gulp.task('test', ['test:local']);
 gulp.task('serve',   function () {
     // browserSync Server
     // ------------------
-    browserSync({
+    browserSync.init({
         notify: true,
         // Run as an https by uncommenting 'https: true'
         // Note: this uses an unsigned certificate which on first access
@@ -45,6 +45,7 @@ gulp.task('serve',   function () {
             directory: true
         }
     });
+    gulp.watch("**/*.html").on('change', browserSync.reload);
 
 });
 
