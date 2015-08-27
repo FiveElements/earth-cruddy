@@ -8,6 +8,8 @@
 
 <link rel="import" href="../earth-editable-layout.html">
 
+<link rel="import" href="../../air-cruddy/air-cruddy.html">
+
 <!--
 
 The `user-validator` provides  
@@ -33,55 +35,12 @@ The `user-validator` provides
             <div>
                 <h1>My Title</h1>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent in vehicula lorem, sed congue
-                    risus. Vestibulum lobortis finibus tellus, nec mollis quam. Duis bibendum massa sed lectus tempus
-                    finibus. Proin vestibulum, nisi ac elementum tincidunt, velit justo commodo massa, quis mattis nisl
-                    nisl sed velit. Phasellus sollicitudin sapien ante, ut laoreet erat imperdiet id. In iaculis feugiat
-                    lorem, a varius purus vulputate non. Vivamus nec quam ipsum. Duis convallis sodales dui. Proin
-                    blandit consequat sem nec interdum.
-                </p>
+                <air-cruddy data="{{data}}"    entity-id="new" >
+                    <paper-input label="Firstname" value="{{data._source.firstname}}" required></paper-input>
+                    <paper-input label="Lastname" value="{{data._source.lastname}}" required></paper-input>
+                </air-cruddy>
 
-                <p>
-                    Ut lobortis, ipsum eget eleifend blandit, quam mauris semper leo, nec suscipit sapien metus at
-                    justo. Sed facilisis sagittis volutpat. Quisque eleifend imperdiet libero id accumsan. Phasellus
-                    augue diam, ornare sed dapibus vitae, elementum a diam. Proin sed dignissim elit. Aenean mollis
-                    justo eu sapien gravida consequat. Maecenas viverra cursus dui sollicitudin mattis. Nam at lectus at
-                    ex viverra ornare. Nam ut enim neque. In euismod ipsum erat, eu facilisis urna feugiat sit amet.
-                    Pellentesque in nibh mauris. Fusce a nisi posuere, dictum lorem non, euismod nisl. Cras venenatis eu
-                    purus eu vulputate.
-                </p>
 
-                <p>
-                    Sed id dictum purus. Maecenas sit amet orci lobortis, pulvinar magna ac, bibendum turpis. Curabitur
-                    aliquet volutpat dui, in placerat massa elementum sit amet. Pellentesque varius ligula felis, sed
-                    suscipit mi blandit in. Etiam tortor metus, laoreet in ex congue, facilisis egestas enim. Nulla sit
-                    amet erat et velit ornare suscipit. Nulla eu vulputate eros, sed rhoncus magna. Cras sit amet mi
-                    sapien. Pellentesque lectus odio, cursus ut dolor sit amet, ultricies vehicula arcu. Vivamus viverra
-                    erat tellus, et placerat nibh efficitur quis.
-                </p>
-
-                <p>
-                    Donec laoreet aliquet ex et varius. Sed ultricies, diam eu eleifend eleifend, ipsum nulla varius
-                    ligula, sed volutpat nisl quam eget nisl. Morbi pellentesque, magna vel sollicitudin euismod, diam
-                    dui ultrices nunc, vel fringilla velit sapien eget tellus. Nunc aliquet cursus felis non facilisis.
-                    Nunc dolor eros, consectetur ut nibh vel, ullamcorper dignissim ligula. Duis porta mauris neque,
-                    vitae porta purus vehicula et. Donec facilisis, augue quis fringilla consectetur, nibh neque aliquam
-                    nunc, vel maximus tellus lacus ac leo. Nam nec sagittis ex, sit amet blandit purus. Duis sit amet
-                    odio aliquet, pharetra nulla id, consectetur arcu. Ut eget metus eget erat blandit interdum et nec
-                    ex. Nulla sed massa magna. Cras et rutrum quam. Maecenas ac blandit ante, id finibus purus. Proin
-                    massa mi, fringilla id risus vel, auctor mattis felis. Morbi enim lectus, euismod ac lectus ut,
-                    sollicitudin imperdiet urna. Curabitur efficitur placerat scelerisque.
-                </p>
-
-                <p>
-                    Nunc rutrum imperdiet tellus, in congue mauris. Vestibulum sit amet eleifend felis. Interdum et
-                    malesuada fames ac ante ipsum primis in faucibus. Cras laoreet pretium hendrerit. Donec vehicula
-                    ultrices tellus, eu rutrum massa placerat a. Aenean iaculis tellus commodo dolor eleifend efficitur.
-                    Vestibulum bibendum mi quis turpis tempor, a tempor nibh feugiat. Nullam tempor metus vulputate
-                    facilisis aliquam. Sed posuere sagittis lorem, ut facilisis sem gravida a. Etiam eleifend tincidunt
-                    arcu eget malesuada. Donec sit amet vulputate elit. Fusce pellentesque arcu a nibh finibus suscipit.
-                    Sed porta consequat eros, quis molestie orci tempor et. Vestibulum ultricies euismod metus.
-                </p>
             </div>
         </earth-editable-layout>
     </template>

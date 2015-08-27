@@ -1,38 +1,36 @@
 {
   "name": "earth-editable-layout",
-  "private": true,
   "version": "0.0.1",
-  "description": "A Polymer element that manage Validation Aggregation",
-  "main": "earth-editable-layout.html",
-  "author": [
-    "The Five Elements Authors"
-  ],
+  "description": "Earth Editable-layout",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test:local"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiveElements/earth-editable-layout.git"
+  },
   "keywords": [
     "web-components",
     "polymer",
     "five-elements",
-    "air-elements",
-    "validator"
+    "water-elements",
+    "paginator"
   ],
-  "ignore": [
-    "/.*",
-    ".*",
-    "package.json",
-    "gulpfile.js"
-  ],
-  "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0"
+  "author": "Five Elements Author",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FiveElements/earth-editable-layout/issues"
   },
+  "homepage": "https://github.com/FiveElements/earth-editable-layout#readme",
   "devDependencies": {
-    "test-fixture": "polymerelements/test-fixture#^1.0.0",
-    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
-    "web-component-tester": "*",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
-    "paper-input": "PolymerElements/paper-input#^1.0.0",
-    "paper-button": "PolymerElements/paper-button#^1.0.0",
-    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
-    "iron-icon": "PolymerElements/iron-icon#~1.0.0",
-    "iron-icons": "PolymerElements/iron-icons#~1.0.1",
-    "paper-toast": "PolymerElements/paper-toast#~1.0.0"
+    "browser-sync": "^2.8.2",
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.2",
+    "jshint-stylish": "^2.0.1",
+    "web-component-tester": "^3.3.10"
   }
 }

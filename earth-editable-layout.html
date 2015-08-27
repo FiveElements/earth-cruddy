@@ -38,8 +38,8 @@ The `earth-editable-layout` provides layout for edition
                     <content select="[bannerTitle]"></content>
                 </div>
                 <div>
-                    <paper-icon-button icon="check" disabled?="{{!status.toSave}}" on-tap="onSave"></paper-icon-button>
-                    <paper-icon-button icon="delete" disabled?="{{!status.toDelete}}" on-tap="onDelete"></paper-icon-button>
+                    <paper-icon-button icon="check" disabled?="{{!status.isDirty}}" on-tap="_onSave"></paper-icon-button>
+                    <paper-icon-button icon="delete" disabled?="{{!status.toDelete}}" on-tap="_onDelete"></paper-icon-button>
                     <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
                 </div>
             </paper-toolbar>
@@ -61,7 +61,12 @@ The `earth-editable-layout` provides layout for edition
         Polymer({
             is: 'earth-editable-layout',
 
-            properties: {},
+            properties: {
+                status: {
+                    type: Object,
+                    notify: true
+                }
+            },
 
             listeners: {
                 'air-cruddy-element-register': '_registerCruddyElement',
@@ -79,8 +84,13 @@ The `earth-editable-layout` provides layout for edition
             // --- Node Watcher
             // --- ---------------------------
             _registerCruddyElement: function (e) {
-                // ??   e.target._parentForm = this;
+                e.target._parentForm = this;
                 if (this !== e.target) {
+                    // Single
+                    this._cruddyElement = e.target;
+                    this.status =   this._cruddyElement.crudStatus;
+                    console.log('Register cruddy ',  e.target);
+                    // List
                     this._cruddyElements.push(e.target);
                 }
             },
@@ -88,6 +98,8 @@ The `earth-editable-layout` provides layout for edition
             _unregisterCruddyElement: function(e) {
                 var target = e.detail.target;
                 if (target) {
+                    //
+                    // List
                     var index = this._cruddyElements.indexOf(target);
                     if (index > -1) {
                         this._cruddyElements.splice(index, 1);
@@ -95,16 +107,50 @@ The `earth-editable-layout` provides layout for edition
                 }
             },
 
-            // --- Action
+            // --- Button
             // --- ---------------------------
 
-            onSave: function (event) {
+            _onSave: function (event) {
+                this.save();
+            },
+
+            _onDelete: function (event) {
+                this.delete();
+            },
+
+
+
+            // --- Crud Status
+            // --- ---------------------------
+
+            _getCruddyStatusUpdate: function () {
 
             },
 
-            onDelete: function (event) {
 
-            }
+            // --- Action
+            // --- ---------------------------
+
+            _callCruddyFunction: function (funcName) {
+                if (this._cruddyElements) {
+                    this._cruddyElements.forEach(function (elt) {
+                        if (typeof elt[funcName] === 'function') {
+                            elt[funcName]();
+                        }
+                    });
+                }
+            },
+
+
+            save: function () {
+                this._callCruddyFunction('save');
+            },
+
+            delete: function () {
+                this._callCruddyFunction('delete');
+            },
+
+
 
 
 
