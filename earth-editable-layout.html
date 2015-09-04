@@ -38,14 +38,15 @@ The `earth-editable-layout` provides layout for edition
                     <content select="[bannerTitle]"></content>
                 </div>
                 <div>
-                    <paper-icon-button icon="check" disabled?="{{!status.isDirty}}" on-tap="_onSave"></paper-icon-button>
-                    <paper-icon-button icon="delete" disabled?="{{!status.toDelete}}" on-tap="_onDelete"></paper-icon-button>
+                    <paper-icon-button icon="check" disabled?="{{status.isDirty}}" on-tap="_onSave"></paper-icon-button>
+                    <paper-icon-button icon="delete" disabled?="{{!status.isDirty}}" on-tap="_onDelete"></paper-icon-button>
                     <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
                 </div>
             </paper-toolbar>
 
             <!-- Main Content -->
             <div class="content fit">
+                <div>Status: <span>{{status.isDirty}}</span></div>
                 <content></content>
             </div>
         </paper-header-panel>
@@ -70,7 +71,12 @@ The `earth-editable-layout` provides layout for edition
 
             listeners: {
                 'air-cruddy-element-register': '_registerCruddyElement',
-                'air-cruddy-element-unregister': '_unregisterCruddyElement'
+                'air-cruddy-element-unregister': '_unregisterCruddyElement',
+                'air-cruddy-status': 'printChange'
+            },
+
+            printChange: function(e) {
+              console.warn('Change crud status ' , e.detail);
             },
 
             // --- Life Cycle
@@ -89,6 +95,7 @@ The `earth-editable-layout` provides layout for edition
                     // Single
                     this._cruddyElement = e.target;
                     this.status =   this._cruddyElement.crudStatus;
+                    console.log('Register cruddy status', this.status);
                     console.log('Register cruddy ',  e.target);
                     // List
                     this._cruddyElements.push(e.target);
