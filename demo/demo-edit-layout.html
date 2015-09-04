@@ -9,6 +9,7 @@
 <link rel="import" href="../earth-editable-layout.html">
 
 <link rel="import" href="../../air-cruddy/air-cruddy.html">
+<link rel="import" href="../../air-cruddy-cloudy/air-cruddy-cloudy-es.html">
 
 <!--
 
@@ -35,7 +36,8 @@ The `user-validator` provides
             <div>
                 <h1>My Title</h1>
 
-                <air-cruddy data="{{data}}"    entity-id="new" >
+                <air-cruddy data="{{data}}" crud-api="air-cruddy-cloudy-es" endpoint="http://localhost:9200/5elements/5elements"
+                            entity-id="1" >
                     <paper-input label="Firstname" value="{{data._source.firstname}}" required></paper-input>
                     <paper-input label="Lastname" value="{{data._source.lastname}}" required></paper-input>
                 </air-cruddy>

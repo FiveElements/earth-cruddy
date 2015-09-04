@@ -41,6 +41,6 @@
     "iron-icon": "PolymerElements/iron-icon#^1.0.0",
     "iron-icons": "PolymerElements/iron-icons#^1.0.1",
     "paper-toast": "PolymerElements/paper-toast#^1.0.0",
-    "air-cruddy": "FiveElements/air-cruddy#^0.0.0"
+    "air-cruddy": "FiveElements/air-cruddy#master"
   }
 }
