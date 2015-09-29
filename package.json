@@ -27,10 +27,10 @@
   },
   "homepage": "https://github.com/FiveElements/earth-editable-layout#readme",
   "devDependencies": {
-    "browser-sync": "^2.8.2",
+    "browser-sync": "^2.9.6",
     "gulp": "^3.9.0",
     "gulp-jshint": "^1.11.2",
     "jshint-stylish": "^2.0.1",
-    "web-component-tester": "^3.3.10"
+    "web-component-tester": "^3.3.22"
   }
 }

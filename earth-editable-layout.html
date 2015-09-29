@@ -38,15 +38,17 @@ The `earth-editable-layout` provides layout for edition
                     <content select="[bannerTitle]"></content>
                 </div>
                 <div>
-                    <paper-icon-button icon="check" disabled?="{{status.isDirty}}" on-tap="_onSave"></paper-icon-button>
-                    <paper-icon-button icon="delete" disabled?="{{!status.isDirty}}" on-tap="_onDelete"></paper-icon-button>
+                    <paper-icon-button icon="check" disabled$="[[!status.isDirty]]" on-tap="_onSave"></paper-icon-button>
+                    <paper-icon-button icon="delete" disabled?="{{!status.isDirty}}"
+                                       on-tap="_onDelete"></paper-icon-button>
                     <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
                 </div>
             </paper-toolbar>
 
             <!-- Main Content -->
             <div class="content fit">
-                <div>Status: <span>{{status.isDirty}}</span></div>
+                <div>Status From Earth : <span>{{status.isDirty}}</span></div>
+                <div>Mode From Earth : <span>{{status.mode}}</span></div>
                 <content></content>
             </div>
         </paper-header-panel>
@@ -75,8 +77,10 @@ The `earth-editable-layout` provides layout for edition
                 'air-cruddy-status': 'printChange'
             },
 
-            printChange: function(e) {
-              console.warn('Change crud status ' , e.detail);
+//
+            printChange: function (e) {
+                console.warn('---- Change crud status ', e.detail);
+                this.set('status',e.detail);
             },
 
             // --- Life Cycle
@@ -86,6 +90,11 @@ The `earth-editable-layout` provides layout for edition
                 this._cruddyElements = [];
             },
 
+            // --- Status computer
+            // --- ---------------------------
+            _isSavabled: function (status) {
+                return !this.status.isDirty;
+            },
 
             // --- Node Watcher
             // --- ---------------------------
@@ -94,15 +103,16 @@ The `earth-editable-layout` provides layout for edition
                 if (this !== e.target) {
                     // Single
                     this._cruddyElement = e.target;
-                    this.status =   this._cruddyElement.crudStatus;
+                    this.set('status', this._cruddyElement.crudStatus);
+//                    this.status = this._cruddyElement.crudStatus;
                     console.log('Register cruddy status', this.status);
-                    console.log('Register cruddy ',  e.target);
+                    console.log('Register cruddy ', e.target);
                     // List
                     this._cruddyElements.push(e.target);
                 }
             },
 
-            _unregisterCruddyElement: function(e) {
+            _unregisterCruddyElement: function (e) {
                 var target = e.detail.target;
                 if (target) {
                     //
@@ -124,7 +134,6 @@ The `earth-editable-layout` provides layout for edition
             _onDelete: function (event) {
                 this.delete();
             },
-
 
 
             // --- Crud Status
@@ -156,9 +165,6 @@ The `earth-editable-layout` provides layout for edition
             delete: function () {
                 this._callCruddyFunction('delete');
             },
-
-
-
 
 
         });
