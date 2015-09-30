@@ -1,0 +1,44 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../../neon-animation/neon-animation-behavior.html">
+
+<!--
+
+The `earth-expand-animation` provides  
+
+@group earth-expand-animation Elements
+@element earth-expand-animation
+-->
+
+<dom-module id="earth-expand-animation">
+    <style>
+        :host {
+            display: block;
+        }
+    </style>
+    <template>
+
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'earth-expand-animation',
+
+        behaviors: [
+            Polymer.NeonAnimationBehavior
+        ],
+
+        configure: function(config) {
+            var node = config.node;
+            var height = node.getBoundingClientRect().height;
+            this._effect = new KeyframeEffect(node, [{
+                height: (height / 2) + 'px'
+            }, {
+                height: height + 'px'
+            }], this.timingFromConfig(config));
+            return this._effect;
+        }
+
+    });
+</script>

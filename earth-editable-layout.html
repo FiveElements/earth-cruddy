@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-dropdown/iron-dropdown.html">
 
 <link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../paper-header-panel/paper-header-panel.html">
@@ -8,6 +9,12 @@
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+
+<link rel="import" href="earth-dropdown-trigger.html">
+
+<link rel="import" href="../paper-item/paper-icon-item.html">
 
 <!--
 
@@ -25,6 +32,14 @@ The `earth-editable-layout` provides layout for edition
             display: block;
             height: 100%;
         }
+
+       ul {
+           list-style-type: none;
+            background-color: var(--paper-menu-background-color, --primary-background-color);
+            color: var(--paper-menu-color, --primary-text-color);
+        }
+
+
     </style>
     <template>
 
@@ -38,17 +53,31 @@ The `earth-editable-layout` provides layout for edition
                     <content select="[bannerTitle]"></content>
                 </div>
                 <div>
-                    <paper-icon-button icon="check" disabled$="[[!status.isDirty]]" on-tap="_onSave"></paper-icon-button>
-                    <paper-icon-button icon="delete" disabled?="{{!status.isDirty}}"
-                                       on-tap="_onDelete"></paper-icon-button>
-                    <paper-icon-button icon="more-vert" on-tap="moreAction"></paper-icon-button>
+                    <paper-icon-button icon="check" disabled$="[[!status.isDirty]]"
+                                       on-tap="_onSave"></paper-icon-button>
+                    <earth-dropdown-trigger>
+                        <paper-icon-button class="dropdown-trigger" icon="more-vert"></paper-icon-button>
+                        <ul class="dropdown-content" tabindex="0">
+                            <li>
+                                <paper-icon-item on-tap="_onDelete">
+                                    <iron-icon icon="delete" item-icon></iron-icon>
+                                    Delete
+                                </paper-icon-item>
+                            </li>
+                            <li>
+                                <paper-icon-item on-tap="_onDelete">
+                                    <iron-icon icon="check" item-icon></iron-icon>
+                                    Save
+                                </paper-icon-item>
+                            </li>
+                        </ul>
+                    </earth-dropdown-trigger>
+
                 </div>
             </paper-toolbar>
 
             <!-- Main Content -->
             <div class="content fit">
-                <div>Status From Earth : <span>{{status.isDirty}}</span></div>
-                <div>Mode From Earth : <span>{{status.mode}}</span></div>
                 <content></content>
             </div>
         </paper-header-panel>
@@ -79,8 +108,14 @@ The `earth-editable-layout` provides layout for edition
 
 //
             printChange: function (e) {
-                console.warn('---- Change crud status ', e.detail);
-                this.set('status',e.detail);
+                this.set('status', e.detail);
+            },
+
+
+            // --- Life Cycle
+            // --- ---------------------------
+            openMoreAction: function () {
+                this.$.dropdownMoreAction.open();
             },
 
             // --- Life Cycle
@@ -104,9 +139,6 @@ The `earth-editable-layout` provides layout for edition
                     // Single
                     this._cruddyElement = e.target;
                     this.set('status', this._cruddyElement.crudStatus);
-//                    this.status = this._cruddyElement.crudStatus;
-                    console.log('Register cruddy status', this.status);
-                    console.log('Register cruddy ', e.target);
                     // List
                     this._cruddyElements.push(e.target);
                 }
@@ -139,10 +171,6 @@ The `earth-editable-layout` provides layout for edition
             // --- Crud Status
             // --- ---------------------------
 
-            _getCruddyStatusUpdate: function () {
-
-            },
-
 
             // --- Action
             // --- ---------------------------
@@ -164,7 +192,7 @@ The `earth-editable-layout` provides layout for edition
 
             delete: function () {
                 this._callCruddyFunction('delete');
-            },
+            }
 
 
         });
