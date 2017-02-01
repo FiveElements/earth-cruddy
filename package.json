@@ -2,35 +2,26 @@
   "name": "earth-editable-layout",
   "version": "0.0.1",
   "description": "Earth Editable-layout",
-  "main": "gulpfile.js",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FiveElements/earth-editable-layout.git"
+  },
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "test:local"
+    "lint": "polymer lint  --no-follow-dependencies  --include-dependencies bower_components/*  --input *.html",
+    "dev": "polymer serve -p 8080 | npm run watch",
+    "test": "polymer test",
+    "dev-install": "npm install -g bower polymer-cli browser-sync",
+    "watch": "browser-sync start --proxy localhost:8080 --startPath /components/earth-editable-layout/demo/ --files *.html,*.js,demo/*"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FiveElements/earth-editable-layout.git"
-  },
-  "keywords": [
-    "web-components",
-    "polymer",
-    "five-elements",
-    "water-elements",
-    "paginator"
-  ],
-  "author": "Five Elements Author",
+  "author": "FiveElements",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/FiveElements/earth-editable-layout/issues"
-  },
-  "homepage": "https://github.com/FiveElements/earth-editable-layout#readme",
   "devDependencies": {
-    "browser-sync": "^2.9.6",
-    "gulp": "^3.9.0",
-    "gulp-jshint": "^1.11.2",
-    "jshint-stylish": "^2.0.1",
-    "web-component-tester": "^3.3.22"
+    "browser-sync": "^2.18.6",
+    "gulp": "^3.9.1",
+    "proxy-middleware": "^0.15.0"
   }
 }
