@@ -1,4 +1,5 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
+
 
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-dropdown/iron-dropdown.html">
@@ -11,39 +12,24 @@
 
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 
-<link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-icon-item.html">
 <link rel="import" href="../paper-item/paper-item.html">
 
 <link rel="import" href="earth-dropdown-trigger.html">
 
 
-<!--
-
-The `earth-editable-layout` provides layout for edition
-
-@group earth Elements
-@element earth-editable-layout
-@demo demo/index.html
--->
-
 <dom-module id="earth-editable-layout">
-
-    <style is="custom-style" include="iron-flex iron-flex-alignment">
-        :host {
-            display: block;
-            height: 100%;
-        }
-
-       ul {
-           list-style-type: none;
-            background-color: var(--paper-menu-background-color, var(--primary-background-color));
-            color: var(--paper-menu-color, var(--primary-text-color));
-        }
-
-
-    </style>
     <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                height: 100%;
+            }
+
+            ul {
+                list-style-type: none;
+            }
+        </style>
 
 
         <paper-header-panel>
@@ -84,58 +70,64 @@ The `earth-editable-layout` provides layout for edition
             </div>
         </paper-header-panel>
 
-
     </template>
-</dom-module>
 
-<script>
-    (function () {
-        'use strict';
+    <script>
+        /**
+         * `earth-editable-layout`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class EarthEditableLayout extends Polymer.Element {
+            static get is() {
+                return 'earth-editable-layout';
+            }
 
-        Polymer({
-            is: 'earth-editable-layout',
+            static get properties() {
+                return {
+                    status: {
+                        type: Object
+                    }
+                };
+            }
 
-            properties: {
-                status: {
-                    type: Object,
-                    notify: true
-                },
-            },
+//            listeners: {
+//                'air-cruddy-element-register': '_registerCruddyElement',
+//                'air-cruddy-element-unregister': '_unregisterCruddyElement',
+//                'air-cruddy-status': 'printChange'
+//            },
 
-            listeners: {
-                'air-cruddy-element-register': '_registerCruddyElement',
-                'air-cruddy-element-unregister': '_unregisterCruddyElement',
-                'air-cruddy-status': 'printChange'
-            },
 
-//
-            printChange: function (e) {
+            printChange(e) {
                 this.set('status', e.detail);
-            },
+            }
 
 
             // --- Life Cycle
             // --- ---------------------------
-            openMoreAction: function () {
+            openMoreAction() {
                 this.$.dropdownMoreAction.open();
-            },
+            }
 
             // --- Life Cycle
             // --- ---------------------------
-            ready: function () {
+            ready() {
                 // Holds all the custom elements registered with this form.
                 this._cruddyElements = [];
-            },
+            }
 
             // --- Status computer
             // --- ---------------------------
-            _isSavabled: function (status) {
+            _isSavabled(status) {
                 return !this.status.isDirty;
-            },
+            }
 
             // --- Node Watcher
             // --- ---------------------------
-            _registerCruddyElement: function (e) {
+            _registerCruddyElement(e) {
                 e.target._parentForm = this;
                 if (this !== e.target) {
                     // Single
@@ -144,30 +136,30 @@ The `earth-editable-layout` provides layout for edition
                     // List
                     this._cruddyElements.push(e.target);
                 }
-            },
+            }
 
-            _unregisterCruddyElement: function (e) {
-                var target = e.detail.target;
+            _unregisterCruddyElement(e) {
+                const target = e.detail.target;
                 if (target) {
                     //
                     // List
-                    var index = this._cruddyElements.indexOf(target);
+                    const index = this._cruddyElements.indexOf(target);
                     if (index > -1) {
                         this._cruddyElements.splice(index, 1);
                     }
                 }
-            },
+            }
 
             // --- Button
             // --- ---------------------------
 
-            _onSave: function (event) {
+            _onSave(event) {
                 this.save();
-            },
+            }
 
-            _onDelete: function (event) {
+            _onDelete(event) {
                 this.delete();
-            },
+            }
 
 
             // --- Crud Status
@@ -177,7 +169,7 @@ The `earth-editable-layout` provides layout for edition
             // --- Action
             // --- ---------------------------
 
-            _callCruddyFunction: function (funcName) {
+            _callCruddyFunction(funcName) {
                 if (this._cruddyElements) {
                     this._cruddyElements.forEach(function (elt) {
                         if (typeof elt[funcName] === 'function') {
@@ -185,18 +177,19 @@ The `earth-editable-layout` provides layout for edition
                         }
                     });
                 }
-            },
-
-
-            save: function () {
-                this._callCruddyFunction('save');
-            },
-
-            delete: function () {
-                this._callCruddyFunction('delete');
             }
 
 
-        });
-    })();
-</script>
+            save() {
+                this._callCruddyFunction('save');
+            }
+
+            delete() {
+                this._callCruddyFunction('delete');
+            }
+
+        }
+
+        window.customElements.define(EarthEditableLayout.is, EarthEditableLayout);
+    </script>
+</dom-module>

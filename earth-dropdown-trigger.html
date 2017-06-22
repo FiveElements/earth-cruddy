@@ -1,84 +1,58 @@
-<link rel="import" href="../polymer/polymer.html">
-
-<link rel="import" href="../neon-animation/neon-animations.html">
-
-<link rel="import" href="earth-expand-animation.html">
-
-<!--
-
-The `earth-dropdown-trigger` provides  
-
-@group earth-dropdown-trigger Elements
-@element earth-dropdown-trigger
--->
+<link rel="import" href="../polymer/polymer-element.html">
 
 <dom-module id="earth-dropdown-trigger">
-    <style>
-        :host {
-            display: inline-block;
-            margin: 1em;
-        }
-    </style>
     <template>
+        <style>
+            :host {
+                display: inline-block;
+                margin: 1em;
+            }
+        </style>
         <div on-tap="open">
             <slot name="dropdown-trigger"></slot>
         </div>
         <iron-dropdown id="dropdown"
                        vertical-align="[[verticalAlign]]"
                        horizontal-align="[[horizontalAlign]]"
-                       disabled="[[disabled]]"
-                       open-animation-config="[[openAnimationConfig]]"
-                       close-animation-config="[[closeAnimationConfig]]">
+                       disabled="[[disabled]]">
             <content select=".dropdown-content"></content>
         </iron-dropdown>
     </template>
-</dom-module>
 
-<script>
-    Polymer({
-        is: 'earth-dropdown-trigger',
-        properties: {
-            verticalAlign: {
-                type: String,
-                value: 'top'
-            },
-            horizontalAlign: {
-                type: String,
-                value: 'right'
-            },
-            disabled: Boolean,
-            openAnimationConfig: {
-                type: Array,
-                value: function() {
-                    return [{
-                        name: 'fade-in-animation',
-                        timing: {
-                            delay: 150,
-                            duration: 50
-                        }
-                    }, {
-                        name: 'earth-expand-animation',
-                        timing: {
-                            delay: 150,
-                            duration: 200
-                        }
-                    }];
-                }
-            },
-            closeAnimationConfig: {
-                type: Array,
-                value: function() {
-                    return [{
-                        name: 'fade-out-animation',
-                        timing: {
-                            duration: 200
-                        }
-                    }];
-                }
+    <script>
+        /**
+         * `earth-dropdown-trigger`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class EarthDropdownTrigger extends Polymer.Element {
+            static get is() {
+                return 'earth-dropdown-trigger';
             }
-        },
-        open: function() {
-            this.$.dropdown.open();
+
+            static get properties() {
+                return {
+                    verticalAlign: {
+                        type: String,
+                        value: 'top'
+                    },
+                    horizontalAlign: {
+                        type: String,
+                        value: 'right'
+                    },
+                    disabled: Boolean,
+
+                };
+            }
+
+            open() {
+                this.$.dropdown.open();
+            }
         }
-    });
-</script>
+
+        window.customElements.define(EarthDropdownTrigger.is, EarthDropdownTrigger);
+    </script>
+</dom-module>

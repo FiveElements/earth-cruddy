@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>polymer2-element test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+
+    <link rel="import" href="../earth-editable-layout.html">
+
+    <link rel="import" href="../../paper-input/paper-input.html">
+
+  </head>
+  <body>
+
+    <test-fixture id="BasicTestFixture">
+      <template  is="dom-template">
+        <earth-editable-layout>
+          <paper-input label="Firstname" value="Toto" required></paper-input>
+          <paper-input label="Lastname" value="{{lastname}}" required></paper-input>
+        </earth-editable-layout>
+      </template>
+    </test-fixture>
+
+
+    <script>
+      //  ',,,,,c ∞◊◊  wn;iıŒLU;K,                                ,G<BHNK,;= '
+      suite('earth-editable-layout', function() {
+
+        test('instantiating the element with default properties works', function() {
+          var element = fixture('BasicTestFixture');
+            assert.isFalse(element.validate());
+            assert.equal(element._validateElements.length, 2);
+
+        });
+
+          suite('validate', function() {
+              test('Not valid', function() {
+                  var f = fixture('BasicTestFixture');
+                  assert.isFalse(f.validate(), 'Lastname should be not valid');
+              });
+              test('Valid', function() {
+                  var f = fixture('BasicTestFixture', {lastname: 'ohai thurr'});
+                  assert.isTrue(f.validate(), 'Lastname should be valid');
+              });
+          });
+
+      });
+    </script>
+
+  </body>
+</html>
