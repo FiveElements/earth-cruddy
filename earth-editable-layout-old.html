@@ -1,0 +1,195 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-dropdown/iron-dropdown.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../paper-item/paper-item.html">
+
+<!--<link rel="import" href="earth-dropdown-trigger.html">-->
+
+
+<dom-module id="earth-editable-layout">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                height: 100%;
+            }
+
+            ul {
+                list-style-type: none;
+            }
+        </style>
+
+
+        <paper-header-panel>
+
+            <!-- Header Toolbar -->
+            <paper-toolbar>
+                <paper-icon-button icon="arrow-back" on-tap="onBack"></paper-icon-button>
+                <div class="title">
+                    <slot name="bannerTitle"></slot>
+                </div>
+                <div>
+                    <paper-icon-button icon="check" disabled$="[[!status.isDirty]]"
+                                       on-tap="_onSave"></paper-icon-button>
+                    <earth-dropdown-trigger>
+                        <paper-icon-button slot="dropdown-trigger" icon="more-vert"></paper-icon-button>
+                        <ul class="dropdown-content" tabindex="0">
+                            <li>
+                                <paper-icon-item on-tap="_onDelete">
+                                    <iron-icon icon="delete" item-icon></iron-icon>
+                                    Delete
+                                </paper-icon-item>
+                            </li>
+                            <li>
+                                <paper-icon-item on-tap="_onSave">
+                                    <iron-icon icon="check" item-icon></iron-icon>
+                                    Save
+                                </paper-icon-item>
+                            </li>
+                        </ul>
+                    </earth-dropdown-trigger>
+
+                </div>
+            </paper-toolbar>
+
+            <!-- Main Content -->
+            <div class="content fit">
+                <slot></slot>
+            </div>
+        </paper-header-panel>
+
+    </template>
+
+    <script>
+        /**
+         * `earth-editable-layout`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class EarthEditableLayout extends Polymer.Element {
+            static get is() {
+                return 'earth-editable-layout';
+            }
+
+            static get properties() {
+                return {
+                    status: {
+                        type: Object
+                    }
+                };
+            }
+
+//            listeners: {
+//                'air-cruddy-element-register': '_registerCruddyElement',
+//                'air-cruddy-element-unregister': '_unregisterCruddyElement',
+//                'air-cruddy-status': 'printChange'
+//            },
+
+
+            printChange(e) {
+                this.set('status', e.detail);
+            }
+
+
+            // --- Life Cycle
+            // --- ---------------------------
+            openMoreAction() {
+                this.$.dropdownMoreAction.open();
+            }
+
+            // --- Life Cycle
+            // --- ---------------------------
+            ready() {
+                // Holds all the custom elements registered with this form.
+                this._cruddyElements = [];
+            }
+
+            // --- Status computer
+            // --- ---------------------------
+            _isSavabled(status) {
+                return !this.status.isDirty;
+            }
+
+            // --- Node Watcher
+            // --- ---------------------------
+            _registerCruddyElement(e) {
+                e.target._parentForm = this;
+                if (this !== e.target) {
+                    // Single
+                    this._cruddyElement = e.target;
+                    this.set('status', this._cruddyElement.crudStatus);
+                    // List
+                    this._cruddyElements.push(e.target);
+                }
+            }
+
+            _unregisterCruddyElement(e) {
+                const target = e.detail.target;
+                if (target) {
+                    //
+                    // List
+                    const index = this._cruddyElements.indexOf(target);
+                    if (index > -1) {
+                        this._cruddyElements.splice(index, 1);
+                    }
+                }
+            }
+
+            // --- Button
+            // --- ---------------------------
+
+            _onSave(event) {
+                this.save();
+            }
+
+            _onDelete(event) {
+                this.delete();
+            }
+
+
+            // --- Crud Status
+            // --- ---------------------------
+
+
+            // --- Action
+            // --- ---------------------------
+
+            _callCruddyFunction(funcName) {
+                if (this._cruddyElements) {
+                    this._cruddyElements.forEach(function (elt) {
+                        if (typeof elt[funcName] === 'function') {
+                            elt[funcName]();
+                        }
+                    });
+                }
+            }
+
+
+            save() {
+                this._callCruddyFunction('save');
+            }
+
+            delete() {
+                this._callCruddyFunction('delete');
+            }
+
+        }
+
+        window.customElements.define(EarthEditableLayout.is, EarthEditableLayout);
+    </script>
+</dom-module>
