@@ -18,22 +18,22 @@
 
 <dom-module id="earth-editable-layout">
     <template>
-        <style>
+        <style  is="custom-style" include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
                 margin: 0;
-                @apply(--layout-fit);
                 background-color: var(--light-theme-background-color);
             }
 
-            app-header {
-                background-color: var(--primary-color);
-                color:var(--light-primary-color);
+            app-toolbar {
+                background: var(--primary-color);
+                color: var(--dark-theme-text-color);
+                @apply (--paper-font-display1);
                 @apply(--layout-flex);
             }
 
             app-header paper-icon-button {
-                --paper-icon-button-ink-color: white;
+                --paper-icon-button-ink-color: var(--dark-theme-text-color);
             }
 
             app-drawer-layout:not([narrow]) [drawer-toggle] {
@@ -46,12 +46,14 @@
 
                 <app-header slot="header" fixed effects="waterfall">
                     <app-toolbar>
-                        <paper-icon-button icon="icons:arrow-back"></paper-icon-button>
-                        <div main-title>My Drive</div>
-                        <paper-icon-button icon="icons:save"></paper-icon-button>
-                        <paper-icon-button icon="icons:refresh"></paper-icon-button>
-                        <paper-icon-button icon="icons:clear"></paper-icon-button>
-                        <paper-icon-button icon="icons:more-vert"></paper-icon-button>
+                        <paper-icon-button icon="icons:arrow-back" on-tap="_handleBack"></paper-icon-button>
+                        <div main-title>
+                            <slot name="title"></slot>
+                        </div>
+                        <paper-icon-button icon="icons:check"  disabled$="[[!status.isDirty]]"></paper-icon-button>
+                        <!--<paper-icon-button icon="icons:refresh"></paper-icon-button>-->
+                        <!--<paper-icon-button icon="icons:clear"></paper-icon-button>-->
+                        <!--<paper-icon-button icon="icons:more-vert"></paper-icon-button>-->
                     </app-toolbar>
                 </app-header>
 
@@ -79,11 +81,14 @@
 
             static get properties() {
                 return {
-                    prop1: {
-                        type: String,
-                        value: 'earth-editable-layout'
+                    status: {
+                        type: Object
                     }
                 };
+            }
+
+            _handleBack() {
+
             }
         }
 
