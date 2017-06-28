@@ -8,25 +8,34 @@
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../earth-editable-layout.html">
+    <link rel="import" href="sample-content.html">
 
-    <link rel="import" href="demo-edit-layout.html">
 
-    <custom-style>
-        <style is="custom-style" include="demo-pages-shared-styles">
-        </style>
-    </custom-style>
+    <link rel="import" href="../../paper-input/paper-input.html">
+
+    <link rel="import" href="../../air-cruddy/air-cruddy-elasticsearch.html">
+
 </head>
-<body>
-<div class="vertical-section-container centered">
-    <h3>Basic earth-editable-layout demo</h3>
-    <demo-snippet>
-        <template>
-            <demo-edit-layout></demo-edit-layout>
-        </template>
-    </demo-snippet>
-</div>
+<body unresolved>
+<dom-bind>
+
+<template>
+
+<earth-editable-layout>
+    <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
+    <div slot="content">
+        <h1>Page content</h1>
+        <air-cruddy-elasticsearch data="{{data}}"  url="http://localhost:9200/5elements/5elements"
+                                  entity-id="1" >
+            <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
+            <paper-input label="Lastname" value="{{data..lastname}}" required></paper-input>
+        </air-cruddy-elasticsearch>
+        <sample-content size="100"></sample-content>
+        <div>End sample</div>
+    </div>
+</earth-editable-layout>
+</template>
+</dom-bind>
+
 </body>
-</html>
