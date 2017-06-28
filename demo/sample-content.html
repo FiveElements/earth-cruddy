@@ -7,6 +7,7 @@
                 display: block;
             }
         </style>
+        <div id="content"></div>
     </template>
 
     <script>
@@ -99,7 +100,7 @@
                         '<p style="font-size: 14px;">' + this._randomString(3) + '</p>' +
                         '</div>';
                 }
-                this.innerHTML = html;
+                this.$.content.innerHTML = html;
             }
 
         }
