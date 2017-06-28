@@ -107,9 +107,45 @@
                 };
             }
 
+            isDirty() {
+                // TODO Implement method
+                return true;
+            }
+
             _handleBack() {
+                if (this.isDirty()) {
+                    this.openDialogReset();
+                } else {
+                    const detail = {};
+                    this.dispatchEvent(new CustomEvent('earth-layout-back', { detail, bubbles: true, composed: true }));
+                }
+            }
+
+            openDialogCancel() {
 
             }
+
+            // --- Cruddy Action
+            // --- ---------------------------
+            _callCruddyFunction(funcName) {
+                if (this._cruddyElements) {
+                    this._cruddyElements.forEach(function (elt) {
+                        if (typeof elt[funcName] === 'function') {
+                            elt[funcName]();
+                        }
+                    });
+                }
+            }
+
+
+            save() {
+                this._callCruddyFunction('save');
+            }
+
+            delete() {
+                this._callCruddyFunction('delete');
+            }
+
         }
 
         window.customElements.define(EarthEditableLayout.is, EarthEditableLayout);
