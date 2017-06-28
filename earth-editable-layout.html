@@ -10,6 +10,7 @@
 <link rel="import" href="../iron-dropdown/iron-dropdown.html">
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
 
 
 <link rel="import" href="../app-layout/app-drawer/app-drawer.html">
@@ -41,6 +42,11 @@
 
             app-drawer-layout:not([narrow]) [drawer-toggle] {
                 display: none;
+            }
+
+            paper-progress {
+                width: 100%;
+
             }
 
             /*[main-title] {*/
@@ -76,8 +82,11 @@
                         <!--<div main-title>Pharrell Williams</div>-->
                     <!--</app-toolbar>-->
                 </app-header>
+                <div>
+                    <paper-progress id="progress" indeterminate="[[false]]"  class="blue"  ></paper-progress>
 
-                <slot name="content"></slot>
+                    <slot name="content"></slot>
+                </div>
 
             </app-header-layout>
 
