@@ -1,12 +1,10 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="../polymer/lib/utils/flattened-nodes-observer.html">
 
 <link rel="import" href="../iron-icons/iron-icons.html">
-
-
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-
 <link rel="import" href="../iron-dropdown/iron-dropdown.html">
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -19,6 +17,7 @@
 <link rel="import" href="../app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../app-layout/app-scroll-effects/app-scroll-effects.html">
+
 
 <dom-module id="earth-editable-layout">
     <template>
@@ -85,7 +84,7 @@
                 <div>
                     <paper-progress id="progress" indeterminate="[[false]]"  class="blue"  ></paper-progress>
 
-                    <slot name="content"></slot>
+                    <slot id="content" name="content"></slot>
                 </div>
 
             </app-header-layout>
@@ -133,6 +132,67 @@
             openDialogCancel() {
 
             }
+            // --- Cruddy Locator
+            // --- ---------------------------
+
+            _getAirCrudyNodes() {
+                if (!this._cruddyElements){
+                    const crudies = this._computeFilterNodes(this.$.content, (node)=> {
+                        if (node.save) {
+                            return true;
+                        }
+                    });
+                    this._cruddyElements = crudies;
+                }
+                return this._cruddyElements;
+            }
+
+            _computeFilterNodes(parent, filter) {
+                const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
+                const elements = nodes.reduce((acc, el) => {
+                    const elTagName = el.tagName;
+                    // Exclude not wanted search
+                    // ----------------------------
+                    // To manage the #text
+                    if (!elTagName) {
+                        return acc;
+                    }
+                    switch (el.tagName) {
+                        case 'STYLE':
+                            return acc;
+                    }
+                    // air-cruddy Node
+                    // ----------------------------
+                    if (filter(el)) {
+                        acc.push(el);
+                        return acc;
+                    }
+                    // Search in Shadow root
+                    // ----------------------------
+                    const shadowNode = el.shadowRoot;
+                    if (shadowNode && shadowNode.mode === 'open') {
+                        const childElt = this._computeValidatableElements(shadowNode, filter);
+                        if (childElt && childElt.length > 0) {
+                            acc.push(...childElt);
+                        }
+                        return acc;
+                    }
+                    // Search in Parents
+                    // ----------------------------
+                    const elChild = el.children;
+//                console.log('Test All child', el, elChild);
+                    if (elChild) {
+                        const childElt = this._computeValidatableElements(el, filter);
+                        if (childElt && childElt.length > 0) {
+                            acc.push(...childElt);
+                        }
+                        return acc;
+                    }
+                    return acc;
+                }, []);
+                return elements;
+            }
+
 
             // --- Cruddy Action
             // --- ---------------------------
