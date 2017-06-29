@@ -21,7 +21,7 @@
 
 <dom-module id="earth-editable-layout">
     <template>
-        <style  is="custom-style" include="iron-flex iron-flex-alignment">
+        <style is="custom-style" include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
                 margin: 0;
@@ -49,46 +49,45 @@
             }
 
             /*[main-title] {*/
-                /*margin-left: 64px;*/
-                /*font-size: 32px;*/
-                /*font-weight: 300;*/
+            /*margin-left: 64px;*/
+            /*font-size: 32px;*/
+            /*font-weight: 300;*/
             /*}*/
             /*[condensed-title] {*/
-                /*margin-left: 20px;*/
-                /*font-weight: 300;*/
+            /*margin-left: 20px;*/
+            /*font-weight: 300;*/
             /*}*/
 
         </style>
 
 
-            <app-header-layout fullbleed>
+        <app-header-layout fullbleed>
 
-                <app-header slot="header" condenses fixed effects="waterfall">
-                    <app-toolbar>
-                        <paper-icon-button icon="icons:arrow-back" on-tap="_handleBack"></paper-icon-button>
-                        <div main-title>
-                            <slot name="title"></slot>
-                        </div>
-                        <paper-icon-button icon="icons:check"  disabled$="[[!status.isDirty]]"></paper-icon-button>
-                        <iron-dropdown horizontal-align="right" vertical-align="top">
-                            <paper-icon-button icon="icons:refresh"></paper-icon-button>
-                            <paper-icon-button icon="icons:clear"></paper-icon-button>
-                            <paper-icon-button icon="icons:more-vert"></paper-icon-button>
-                        </iron-dropdown>
-                    </app-toolbar>
-                    <!--<app-toolbar class="middle">Hello </app-toolbar>-->
-                    <!--<app-toolbar class="bottom">-->
-                        <!--<div main-title>Pharrell Williams</div>-->
-                    <!--</app-toolbar>-->
-                </app-header>
-                <div>
-                    <paper-progress id="progress" indeterminate="[[false]]"  class="blue"  ></paper-progress>
+            <app-header slot="header" condenses fixed effects="waterfall">
+                <app-toolbar>
+                    <paper-icon-button icon="icons:arrow-back" on-tap="_handleBack"></paper-icon-button>
+                    <div main-title>
+                        <slot name="title"></slot>
+                    </div>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]"></paper-icon-button>
+                    <iron-dropdown horizontal-align="right" vertical-align="top">
+                        <paper-icon-button icon="icons:refresh"></paper-icon-button>
+                        <paper-icon-button icon="icons:clear"></paper-icon-button>
+                        <paper-icon-button icon="icons:more-vert"></paper-icon-button>
+                    </iron-dropdown>
+                </app-toolbar>
+                <!--<app-toolbar class="middle">Hello </app-toolbar>-->
+                <!--<app-toolbar class="bottom">-->
+                <!--<div main-title>Pharrell Williams</div>-->
+                <!--</app-toolbar>-->
+            </app-header>
+            <div>
+                <paper-progress id="progress" indeterminate="[[false]]" class="blue"></paper-progress>
 
-                    <slot id="content" name="content"></slot>
-                </div>
+                <slot id="content" name="content"></slot>
+            </div>
 
-            </app-header-layout>
-
+        </app-header-layout>
 
 
     </template>
@@ -125,24 +124,25 @@
                     this.openDialogReset();
                 } else {
                     const detail = {};
-                    this.dispatchEvent(new CustomEvent('earth-layout-back', { detail, bubbles: true, composed: true }));
+                    this.dispatchEvent(new CustomEvent('earth-layout-back', {detail, bubbles: true, composed: true}));
                 }
             }
 
             openDialogCancel() {
 
             }
+
             // --- Cruddy Locator
             // --- ---------------------------
 
             _getAirCrudyNodes() {
-                if (!this._cruddyElements){
-                    const crudies = this._computeFilterNodes(this.$.content, (node)=> {
+                if (!this._cruddyElements) {
+                    const crudies = this._computeFilterNodes(this.$.content, (node) => {
                         if (node.save) {
                             return true;
                         }
                     });
-                    this._cruddyElements = crudies;
+                    this._cruddyElements = crudies || [];
                 }
                 return this._cruddyElements;
             }
@@ -197,13 +197,12 @@
             // --- Cruddy Action
             // --- ---------------------------
             _callCruddyFunction(funcName) {
-                if (this._cruddyElements) {
-                    this._cruddyElements.forEach(function (elt) {
-                        if (typeof elt[funcName] === 'function') {
-                            elt[funcName]();
-                        }
-                    });
-                }
+                const cruddyElts = this._getAirCrudyNodes();
+                cruddyElts.forEach((elt) => {
+                    if (typeof elt[funcName] === 'function') {
+                        elt[funcName]();
+                    }
+                });
             }
 
 
