@@ -69,7 +69,7 @@
                     <div main-title>
                         <slot name="title"></slot>
                     </div>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]"></paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" on-tap="save"></paper-icon-button>
                     <iron-dropdown horizontal-align="right" vertical-align="top">
                         <paper-icon-button icon="icons:refresh"></paper-icon-button>
                         <paper-icon-button icon="icons:clear"></paper-icon-button>
@@ -135,68 +135,26 @@
             // --- Cruddy Locator
             // --- ---------------------------
 
-            _getAirCrudyNodes() {
+            _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
                     const crudies = this._computeFilterNodes(this.$.content, (node) => {
-                        if (node.save) {
-                            return true;
+                        let isValid = false;
+                        if (node[funcName]) {
+                            isValid= true;
                         }
+                        console.log('-- test node', node, '===>', isValid);
+                        return isValid;
                     });
                     this._cruddyElements = crudies || [];
                 }
                 return this._cruddyElements;
             }
 
-            /**
-             * Visist all child nodes of parent in order to find validatable nodes
-             * @param parent to visit
-             * @param filter for the nodes
-             * @returns A Array Od filters nodes
-             * @private
-             */
-            _computeFilterNodes(parent, filter) {
-                const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-                const elements = nodes.reduce((acc, el) => {
-                    // Exclude not wanted search
-                    // ----------------------------
-                    const elTagName = el.tagName;
-                    if (!elTagName || elTagName === 'STYLE') {
-                        return acc;
-                    }
-                    // node with validation method
-                    // ----------------------------
-                    if (filter(el)) {
-                        acc.push(el);
-                        return acc;
-                    }
-                    // Determine Parent Type  Open Shadow root or direct Child
-                    // ----------------------------
-                    const shadowNode = el.shadowRoot;
-                    let elChild;
-                    if (shadowNode && (shadowNode.mode === 'open')) {
-                        elChild = shadowNode;
-                    } else {
-                        elChild = el.children;
-                    }
-                    // Search in Parents
-                    // ----------------------------
-                    if (elChild) {
-                        const childElt = this._computeFilterNodes(elChild, filter);
-                        if (childElt && childElt.length > 0) {
-                            acc.push(...childElt);
-                        }
-                        return acc;
-                    }
-                    return acc;
-                }, []);
-                return elements;
-            };
-
 
             // --- Cruddy Action
             // --- ---------------------------
             _callCruddyFunction(funcName) {
-                const cruddyElts = this._getAirCrudyNodes();
+                const cruddyElts = this._getAirCrudyNodes(funcName);
                 cruddyElts.forEach((elt) => {
                     if (typeof elt[funcName] === 'function') {
                         elt[funcName]();
@@ -212,6 +170,61 @@
             delete() {
                 this._callCruddyFunction('delete');
             }
+
+            // --- Utils
+            // --- ---------------------------
+
+
+            /**
+             * Visist all child nodes of parent in order to find filter nodes
+             * @param parent to visit
+             * @param filter for the nodes
+             * @param levelToVisit Number of child level to visit. -1 means visit all level.
+             * @returns A Array Od filters nodes
+             * @private
+             */
+            _computeFilterNodes(parent, filter, levelToVisit=-1) {
+                const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
+                console.log('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+                const elements = nodes.reduce((acc, el) => {
+                    // Exclude not wanted search
+                    // ----------------------------
+                    const elTagName = el.tagName;
+                    if (!elTagName || elTagName === 'STYLE') {
+                        return acc;
+                    }
+                    // node with validation method
+                    // ----------------------------
+                    if (filter(el)) {
+                        acc.push(el);
+                        return acc;
+                    }
+                    // Determine Parent Type  Open Shadow root or direct Child
+                    // ----------------------------
+                    let elChild;
+                    if (levelToVisit!==0) {
+                        const shadowNode = el.shadowRoot;
+                        if (shadowNode && (shadowNode.mode === 'open')) {
+                            elChild = shadowNode;
+                        } else {
+                            elChild = el;
+                        }
+                    }
+                    // Search in Parents
+                    // ----------------------------
+                    if (elChild) {
+                        const childElt = this._computeFilterNodes(elChild, filter, levelToVisit-1);
+                        if (childElt && childElt.length > 0) {
+                            acc.push(...childElt);
+                        }
+                        return acc;
+                    }
+                    return acc;
+                }, []);
+                return elements;
+            };
+
+
 
         }
 
