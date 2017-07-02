@@ -139,8 +139,7 @@
             // --- Method
             // --- ---------------------------
             isDirty() {
-                // TODO Implement method
-                return true;
+                return this.status && this.status.isDirty;
             }
 
             _handleBack() {
