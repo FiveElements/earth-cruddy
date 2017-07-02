@@ -20,22 +20,21 @@
 <body unresolved>
 <dom-bind>
 
-<template>
-
-<earth-editable-layout>
-    <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
-    <div slot="content">
-        <h1>Page content</h1>
-        <air-cruddy-elasticsearch data="{{data}}"  url="http://localhost:9200/5elements/5elements"
-                                  entity-id="1" >
-            <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
-            <paper-input label="Lastname" value="{{data..lastname}}" required></paper-input>
-        </air-cruddy-elasticsearch>
-        <sample-content size="100"></sample-content>
-        <div>End sample</div>
-    </div>
-</earth-editable-layout>
-</template>
+    <template>
+        <earth-editable-layout>
+            <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
+            <div slot="content">
+                <h1>Page content</h1>
+                <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
+                                          entity-id="1" debug>
+                    <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
+                    <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
+                </air-cruddy-elasticsearch>
+                <!--<sample-content size="100"></sample-content>-->
+                <div>End sample</div>
+            </div>
+        </earth-editable-layout>
+    </template>
 </dom-bind>
 
 </body>
