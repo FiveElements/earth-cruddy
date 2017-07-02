@@ -121,23 +121,20 @@
                 this._boundListenerStatusChanged = this._handleStatusChanged.bind(this);
             }
             connectedCallback() {
-                console.log('================================================');
-                console.log('connectedCallback ==', this._boundListenerStatusChanged);
-                this.addEventListener('status-changed', this._boundListenerStatusChanged);
+                this.addEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
                 super.connectedCallback();
             }
             disconnectedCallback() {
                 super.disconnectedCallback();
-                this.removeEventListener('status-changed', this._boundListenerStatusChanged);
+                this.removeEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
             }
 
             // --- Status
             // --- ---------------------------
 
             _handleStatusChanged(e) {
-                console.log('-------------------------------------');
-                console.log('-- handle status changed : ', e.detail);
-                console.log('-------------------------------------');
+                const detail = e.detail;
+                this.status = detail.status;
             }
             // --- Method
             // --- ---------------------------
