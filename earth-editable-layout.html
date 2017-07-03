@@ -121,12 +121,12 @@
                 this._boundListenerStatusChanged = this._handleStatusChanged.bind(this);
             }
             connectedCallback() {
-                this.addEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
+                this.addEventListener('air-cruddy-status', this._boundListenerStatusChanged);
                 super.connectedCallback();
             }
             disconnectedCallback() {
                 super.disconnectedCallback();
-                this.removeEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
+                this.removeEventListener('air-cruddy-status', this._boundListenerStatusChanged);
             }
 
             // --- Status
