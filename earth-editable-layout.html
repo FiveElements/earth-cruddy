@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
 <link rel="import" href="../polymer/lib/utils/flattened-nodes-observer.html">
 
 <link rel="import" href="../iron-icons/iron-icons.html">
@@ -69,7 +70,8 @@
                     <div main-title>
                         <slot name="title"></slot>
                     </div>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" on-tap="save"></paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]"
+                                       on-tap="save"></paper-icon-button>
                     <iron-dropdown horizontal-align="right" vertical-align="top">
                         <paper-icon-button icon="icons:refresh"></paper-icon-button>
                         <paper-icon-button icon="icons:clear"></paper-icon-button>
@@ -82,9 +84,17 @@
                 <!--</app-toolbar>-->
             </app-header>
             <div>
-                <paper-progress id="progress" indeterminate="[[status.tracing.processing]]" class="blue"></paper-progress>
+                <paper-progress id="progress" indeterminate="[[status.tracing.processing]]"></paper-progress>
 
-                <slot id="content" name="content"></slot>
+                <template is="dom-if" if="[[!isData]]">
+                    <slot id="error" name="error">
+                        <h1>Error [[status.error.status]]</h1>
+                    </slot>
+                </template>
+
+                <template is="dom-if" if="[[isData]]">
+                    <slot id="content" name="content"></slot>
+                </template>
             </div>
 
         </app-header-layout>
@@ -108,10 +118,22 @@
 
             static get properties() {
                 return {
+                    isData: {
+                        type: Boolean,
+                        value: true
+                    },
                     status: {
                         type: Object
+                    },
+                    progress: {
+                        type: Boolean,
+                        value: false
                     }
                 };
+            }
+
+            _handleToggleProgress() {
+                this.progress = !this.progress;
             }
 
             // --- Life Cycle
@@ -120,13 +142,15 @@
                 super();
                 this._boundListenerStatusChanged = this._handleStatusChanged.bind(this);
             }
+
             connectedCallback() {
-                this.addEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
+                this.addEventListener('air-cruddy-status', this._boundListenerStatusChanged);
                 super.connectedCallback();
             }
+
             disconnectedCallback() {
                 super.disconnectedCallback();
-                this.removeEventListener('air-cruddy-status-changed', this._boundListenerStatusChanged);
+                this.removeEventListener('air-cruddy-status', this._boundListenerStatusChanged);
             }
 
             // --- Status
@@ -135,7 +159,11 @@
             _handleStatusChanged(e) {
                 const detail = e.detail;
                 this.status = detail.status;
+                console.log('-------------------------------------------------');
+                console.log(JSON.stringify(this.status));
+                console.log('-------------------------------------------------');
             }
+
             // --- Method
             // --- ---------------------------
             isDirty() {
@@ -163,7 +191,7 @@
                     const crudies = this._computeFilterNodes(this.$.content, (node) => {
                         let isValid = false;
                         if (node[funcName]) {
-                            isValid= true;
+                            isValid = true;
                         }
                         return isValid;
                     });
@@ -205,7 +233,7 @@
              * @returns A Array Od filters nodes
              * @private
              */
-            _computeFilterNodes(parent, filter, levelToVisit=-1) {
+            _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
                 console.log('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
@@ -224,7 +252,7 @@
                     // Determine Parent Type  Open Shadow root or direct Child
                     // ----------------------------
                     let elChild;
-                    if (levelToVisit!==0) {
+                    if (levelToVisit !== 0) {
                         const shadowNode = el.shadowRoot;
                         if (shadowNode && (shadowNode.mode === 'open')) {
                             elChild = shadowNode;
@@ -235,7 +263,7 @@
                     // Search in Parents
                     // ----------------------------
                     if (elChild) {
-                        const childElt = this._computeFilterNodes(elChild, filter, levelToVisit-1);
+                        const childElt = this._computeFilterNodes(elChild, filter, levelToVisit - 1);
                         if (childElt && childElt.length > 0) {
                             acc.push(...childElt);
                         }
@@ -245,7 +273,6 @@
                 }, []);
                 return elements;
             };
-
 
 
         }
