@@ -86,9 +86,9 @@
             <div>
                 <paper-progress id="progress" indeterminate="[[status.tracing.processing]]"></paper-progress>
 
-                <template is="dom-if" if="[[!isData]]">
+                <template is="dom-if" if="[[status.tracing.error]]">
                     <slot id="error" name="error">
-                        <h1>Error [[status.error.status]]</h1>
+                        <h1>Error [[status.tracing.error.status]]</h1>
                     </slot>
                 </template>
 
