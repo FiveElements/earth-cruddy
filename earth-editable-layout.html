@@ -82,8 +82,8 @@
                 <!--</app-toolbar>-->
             </app-header>
             <div>
-                <paper-progress id="progress" indeterminate="[[false]]" class="blue"></paper-progress>
-
+                <paper-progress id="progress" indeterminate="[[progress]]"></paper-progress>
+                <div on-tap="_handleToggleProgress">Toggle</div>
                 <slot id="content" name="content"></slot>
             </div>
 
@@ -110,10 +110,17 @@
                 return {
                     status: {
                         type: Object
+                    },
+                    progress: {
+                        type: Boolean,
+                        value: false
                     }
                 };
             }
 
+            _handleToggleProgress() {
+                this.progress = !this.progress;
+            }
             // --- Life Cycle
             // --- ---------------------------
             constructor() {
