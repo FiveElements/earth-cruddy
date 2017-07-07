@@ -97,7 +97,7 @@
                 <!--</app-toolbar>-->
             </app-header>
             <div>
-                <paper-progress id="progress" indeterminate="[[status.tracing.processing]]"></paper-progress>
+                <paper-progress id="progress" indeterminate="[[progress]]"></paper-progress>
 
                 <template is="dom-if" if="[[status.tracing.error]]">
                     <slot id="error" name="error">
@@ -143,12 +143,25 @@
                         type: Boolean,
                         value: true
                     },
+                    /**
+                     * The air cruddy status
+                     */
                     status: {
                         type: Object
                     },
+                    /**
+                     * The progess is running
+                     */
                     progress: {
                         type: Boolean,
                         value: false
+                    },
+                    /**
+                     * The progress min time in ms.
+                     */
+                    progressMinMs: {
+                        type: Number,
+                        value: 250
                     }
                 };
             }
@@ -181,6 +194,27 @@
                 console.log('-------------------------------------------------');
                 console.log(JSON.stringify(this.status));
                 console.log('-------------------------------------------------');
+                this._handleStatusEffects(detail.status);
+            }
+
+            _handleStatusEffects(status) {
+                const tracing = status.tracing;
+                if (tracing.processing) {
+                    this.progress = true;
+                } else {
+                    const progressMissingMs = this.progressMinMs -tracing.processingMs;
+                    if (progressMissingMs > 0) {
+                        this._debouncerProgress = Polymer.Debouncer.debounce(
+                            this._debouncerProgress, // initially undefined
+                            Polymer.Async.timeOut.after(progressMissingMs),
+                            () => {
+                                this.progress = false;
+                            });
+                    } else {
+                        this.progress = false;
+
+                    }
+                }
             }
 
             // --- Method
