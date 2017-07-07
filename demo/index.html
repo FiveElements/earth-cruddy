@@ -7,6 +7,7 @@
     <title>earth-editable-layout demo</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
 
     <link rel="import" href="../earth-editable-layout.html">
     <link rel="import" href="sample-content.html">
@@ -19,21 +20,22 @@
 </head>
 <body unresolved>
 <dom-bind>
-
     <template>
-        <earth-editable-layout>
-            <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
+        <earth-editable-layout status="{{status}}">
+            <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit [[data.firstname]]</div>
             <div slot="content">
                 <h1>Page content</h1>
                 <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
-                                          entity-id="12" debug>
+                                          entity-id="1" debug>
                     <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
                     <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
                 </air-cruddy-elasticsearch>
                 <!--<sample-content size="100"></sample-content>-->
                 <div>End sample</div>
             </div>
-
+            <!--<div slot="error">-->
+                <!--<h1>Bye !!!! </h1>-->
+            <!--</div>-->
         </earth-editable-layout>
     </template>
 </dom-bind>
