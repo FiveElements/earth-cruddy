@@ -22,6 +22,38 @@
 <link rel="import" href="../app-layout/app-scroll-effects/app-scroll-effects.html">
 
 
+<!--
+earth-editable-layout is a complete layout for an air-cruddy elements that manage
+save, delete, validate and retrieves actions.
+
+### Example
+
+Add a title to the toolbar.
+
+```html
+<earth-editable-layout status="{{status}}">
+    <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
+    <div slot="content">
+        <air-cruddy-elasticsearch id="cruddy" data="{{data}}"
+            url="http://localhost:9200/5elements/5elements" entity-id="1">
+                <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
+                <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
+        </air-cruddy-elasticsearch>
+    </div>
+</earth-editable-layout>
+```
+
+### Styling
+
+Custom property                          | Description                  | Default
+-----------------------------------------|------------------------------|-----------------------
+`--earth-layout-header-background-color` | Header background color      | --primary-color
+`--earth-layout-header-text-color`       | Header text color            | --dark-theme-text-color
+
+@group App Elements
+@element app-toolbar
+@demo app-toolbar/demo/index.html
+-->
 <dom-module id="earth-editable-layout">
     <template>
         <style include="iron-flex iron-flex-alignment">
@@ -32,19 +64,22 @@
             }
 
             app-toolbar {
-                background: var(--primary-color);
-                color: var(--dark-theme-text-color);
-                @apply (--paper-font-display1);
-                @apply(--layout-flex);
+                background: var(--earth-layout-header-background-color, var(--primary-color));
+                color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
+                @apply (--layout-flex);
+            }
+
+            [main-title] {
+                @apply (--paper-font-title);
             }
 
             app-header paper-icon-button {
-                --paper-icon-button-ink-color: var(--dark-theme-text-color);
+                --paper-icon-button-ink-color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
             }
 
-            app-drawer-layout:not([narrow]) [drawer-toggle] {
-                display: none;
-            }
+            /*app-drawer-layout:not([narrow]) [drawer-toggle] {*/
+                /*display: none;*/
+            /*}*/
 
             paper-progress {
                 width: 100%;
@@ -52,21 +87,13 @@
             }
 
             /*[slot="dropdown-content"] {*/
-                /*background-color: white;*/
-                /*line-height: 20px;*/
-                /*border-radius: 3px;*/
-                /*box-shadow: 0px 2px 6px #ccc;*/
+            /*background-color: white;*/
+            /*line-height: 20px;*/
+            /*border-radius: 3px;*/
+            /*box-shadow: 0px 2px 6px #ccc;*/
             /*}*/
 
-            /*[main-title] {*/
-            /*margin-left: 64px;*/
-            /*font-size: 32px;*/
-            /*font-weight: 300;*/
-            /*}*/
-            /*[condensed-title] {*/
-            /*margin-left: 20px;*/
-            /*font-weight: 300;*/
-            /*}*/
+
 
         </style>
 
@@ -83,7 +110,7 @@
                                        on-tap="save"></paper-icon-button>
                     <!-- More menu -->
                     <!--<paper-icon-button icon="icons:more-vert"  on-tap="_handleOpenMoreDropdown"></paper-icon-button>-->
-                    <iron-dropdown id="menuMoreDropdown" horizontal-align="right" vertical-align="top" >
+                    <iron-dropdown id="menuMoreDropdown" horizontal-align="right" vertical-align="top">
                         <div slot="dropdown-content">
                             <paper-icon-button icon="icons:refresh"></paper-icon-button>
                             <paper-icon-button icon="icons:clear"></paper-icon-button>
@@ -105,8 +132,8 @@
                     </slot>
                 </template>
 
-                <!--<template is="dom-if" if="[[true]]">-->
-                    <slot id="content" name="content"></slot>
+                <!--<template is="dom-if" if="[[isData]]">-->
+                <slot id="content" name="content"></slot>
                 <!--</template>-->
             </div>
 
@@ -167,7 +194,6 @@
             }
 
 
-
             // --- Life Cycle
             // --- ---------------------------
             constructor() {
@@ -190,11 +216,22 @@
 
             _handleStatusChanged(e) {
                 const detail = e.detail;
-                this.status = detail.status;
+                const status = detail.status;
+                this.status = status;
+                this._handleStatusIsData(status);
+                this._handleStatusEffects(status);
                 console.log('-------------------------------------------------');
-                console.log(JSON.stringify(this.status));
+                console.log(JSON.stringify(status));
                 console.log('-------------------------------------------------');
-                this._handleStatusEffects(detail.status);
+
+            }
+
+            _handleStatusIsData(status) {
+                if (status && ((status.mode === 'update') || (status.mode === 'create'))) {
+                    this.isData = true;
+                } else {
+                    this.isData = false;
+                }
             }
 
             _handleStatusEffects(status) {
@@ -202,7 +239,7 @@
                 if (tracing.processing) {
                     this.progress = true;
                 } else {
-                    const progressMissingMs = this.progressMinMs -tracing.processingMs;
+                    const progressMissingMs = this.progressMinMs - tracing.processingMs;
                     if (progressMissingMs > 0) {
                         this._debouncerProgress = Polymer.Debouncer.debounce(
                             this._debouncerProgress, // initially undefined
@@ -222,7 +259,6 @@
             isDirty() {
                 return this.status && this.status.isDirty;
             }
-
 
 
             // --- Actions
@@ -264,7 +300,7 @@
                 if (this.isDirty()) {
                     this.openDialogSaveOrDismiss();
                 } else {
-                   this.closeForce();
+                    this.closeForce();
                 }
             }
 
@@ -277,13 +313,13 @@
             }
 
             saveAndClose() {
-                this.save().then( ()=> {
+                this.save().then(() => {
                     return this._fireEventClose('save');
                 });
             }
 
             delete() {
-                return Promise.all(this._callCruddyFunction('delete')).then(()=> {
+                return Promise.all(this._callCruddyFunction('delete')).then(() => {
                     return this._fireEventClose('delete');
                 });
             }
@@ -314,8 +350,6 @@
                 });
                 return restults;
             }
-
-
 
 
             // --- Utils
