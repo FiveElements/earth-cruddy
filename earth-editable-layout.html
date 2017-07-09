@@ -69,16 +69,21 @@ Custom property                          | Description                  | Defaul
                 @apply (--layout-flex);
             }
 
-            [main-title] {
-                @apply (--paper-font-title);
-            }
-
             app-header paper-icon-button {
                 --paper-icon-button-ink-color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
             }
 
+            [main-title] {
+                @apply (--paper-font-title);
+            }
+
+            .content {
+                @apply (--paper-font-common-base);
+
+            }
+
             /*app-drawer-layout:not([narrow]) [drawer-toggle] {*/
-                /*display: none;*/
+            /*display: none;*/
             /*}*/
 
             paper-progress {
@@ -92,7 +97,6 @@ Custom property                          | Description                  | Defaul
             /*border-radius: 3px;*/
             /*box-shadow: 0px 2px 6px #ccc;*/
             /*}*/
-
 
 
         </style>
@@ -133,7 +137,9 @@ Custom property                          | Description                  | Defaul
                 </template>
 
                 <!--<template is="dom-if" if="[[isData]]">-->
-                <slot id="content" name="content"></slot>
+                <div class="content">
+                    <slot id="content" name="content"></slot>
+                </div>
                 <!--</template>-->
             </div>
 
