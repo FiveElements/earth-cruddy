@@ -2,6 +2,7 @@
 
 <!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
 <link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
 
 
 <dom-module id="earth-dropdown-trigger">
@@ -10,6 +11,14 @@
             :host {
                 display: inline-block;
                 margin: 1em;
+            }
+
+            :host ::slotted([slot=dropdown-content]){
+                @apply ( --paper-font-menu);
+                background-color: white;
+                line-height: 20px;
+                border-radius: 3px;
+                box-shadow: 0px 2px 6px #ccc;
             }
         </style>
         <div on-tap="open">
@@ -50,35 +59,35 @@
                         value: 'right'
                     },
                     disabled: Boolean,
-                    openAnimationConfig: {
-                        type: Array,
-                        value: function() {
-                            return [{
-                                name: 'fade-in-animation',
-                                timing: {
-                                    delay: 150,
-                                    duration: 50
-                                }
-                            }, {
-                                name: 'expand-animation',
-                                timing: {
-                                    delay: 150,
-                                    duration: 200
-                                }
-                            }];
-                        }
-                    },
-                    closeAnimationConfig: {
-                        type: Array,
-                        value: function() {
-                            return [{
-                                name: 'fade-out-animation',
-                                timing: {
-                                    duration: 200
-                                }
-                            }];
-                        }
-                    }
+//                    openAnimationConfig: {
+//                        type: Array,
+//                        value: function() {
+//                            return [{
+//                                name: 'fade-in-animation',
+//                                timing: {
+//                                    delay: 150,
+//                                    duration: 50
+//                                }
+//                            }, {
+//                                name: 'expand-animation',
+//                                timing: {
+//                                    delay: 150,
+//                                    duration: 200
+//                                }
+//                            }];
+//                        }
+//                    },
+//                    closeAnimationConfig: {
+//                        type: Array,
+//                        value: function() {
+//                            return [{
+//                                name: 'fade-out-animation',
+//                                timing: {
+//                                    duration: 200
+//                                }
+//                            }];
+//                        }
+//                    }
 
                 };
             }

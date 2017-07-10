@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>earth-editable-layout demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../../iron-icons/iron-icons.html">
+    <link rel="import" href="../../iron-icon/iron-icon.html">
+    <link rel="import" href="../../paper-item/paper-icon-item.html">
+    <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+
+    <link rel="import" href="../earth-dropdown-trigger.html">
+
+    <link rel="import" href="demo-edit-layout.html">
+
+    <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
+    </custom-style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Basic earth-editable-layout demo</h3>
+    <demo-snippet>
+        <template>
+            <earth-dropdown-trigger>
+                <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert" ></paper-icon-button>
+                <div slot="dropdown-content">
+                    <paper-icon-item on-tap="_onDelete">
+                        <iron-icon icon="delete"  slot="item-icon"></iron-icon>
+                        Delete
+                    </paper-icon-item>
+                    <paper-icon-item>
+                        <iron-icon icon="icons:refresh" slot="item-icon"></iron-icon>
+                        Refresh
+                    </paper-icon-item>
+                    <paper-icon-item>
+                        <iron-icon icon="inbox" slot="item-icon"></iron-icon>
+                        Inbox
+                    </paper-icon-item>
+                    <paper-icon-item>
+                        <iron-icon icon="icons:refresh" slot="item-icon"></iron-icon>
+                        Refresh
+                    </paper-icon-item>
+                </div>
+            </earth-dropdown-trigger>
+        </template>
+    </demo-snippet>
+</div>
+</body>
+</html>

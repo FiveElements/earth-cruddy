@@ -4,11 +4,13 @@
 <link rel="import" href="../polymer/lib/utils/flattened-nodes-observer.html">
 
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-dropdown/iron-dropdown.html">
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -20,6 +22,9 @@
 <link rel="import" href="../app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../app-layout/app-scroll-effects/app-scroll-effects.html">
+
+
+<link rel="import" href="earth-dropdown-trigger.html">
 
 
 <!--
@@ -80,14 +85,12 @@ Custom property                          | Description                  | Defaul
             /*[main-title] {*/
                 /*@apply (--paper-font-title);*/
             /*}*/
-            ::slotted([slot=title]) {
+            :host  ::slotted([slot=title]) {
                 @apply (--paper-font-title);
-                text-overflow: ellipsis;
-                color: fuchsia;
             }
 
             .content {
-                @apply (--paper-font-common-base);
+                @apply (--paper-font-body1);
 
             }
 
@@ -110,7 +113,7 @@ Custom property                          | Description                  | Defaul
         <app-header-layout fullbleed>
 
             <app-header slot="header" condenses fixed effects="waterfall">
-                <app-toolbar >
+                <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
                     <div main-title>
                         <slot name="title" class="myTitle"></slot>
@@ -119,20 +122,25 @@ Custom property                          | Description                  | Defaul
                          
                     <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]"
                                        on-tap="save"></paper-icon-button>
-
                     <!-- More menu -->
-                    <!--<paper-icon-button icon="icons:more-vert"  on-tap="_handleOpenMoreDropdown"></paper-icon-button>-->
-                    <iron-dropdown id="menuMoreDropdown" horizontal-align="right" vertical-align="top">
+                    <earth-dropdown-trigger>
+                        <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
                         <div slot="dropdown-content">
-                            <paper-icon-button icon="icons:refresh"></paper-icon-button>
-                            <paper-icon-button icon="icons:clear"></paper-icon-button>
+                            <paper-icon-item on-tap="_onDelete">
+                                <iron-icon icon="delete"  slot="item-icon"></iron-icon>
+                                Delete
+                            </paper-icon-item>
+                            <paper-icon-item>
+                                <iron-icon icon="icons:refresh" slot="item-icon"></iron-icon>
+                                Refresh
+                            </paper-icon-item>
                         </div>
-                    </iron-dropdown>
+                    </earth-dropdown-trigger>
 
                 </app-toolbar>
-                <app-toolbar>
-                    <h4 condensed-title>App name condensed</h4>
-                </app-toolbar>
+                <!--<app-toolbar>-->
+                    <!--<h4 condensed-title>App name condensed</h4>-->
+                <!--</app-toolbar>-->
                 <!--<app-toolbar class="middle">Hello </app-toolbar>-->
                 <!--<app-toolbar class="bottom">-->
                 <!--<div main-title>Pharrell Williams</div>-->
@@ -150,6 +158,8 @@ Custom property                          | Description                  | Defaul
                 <!--<template is="dom-if" if="[[isData]]">-->
                 <div class="content">
                     <slot id="content" name="content"></slot>
+
+
                 </div>
                 <!--</template>-->
             </div>
@@ -289,9 +299,7 @@ Custom property                          | Description                  | Defaul
                 this.progress = !this.progress;
             }
 
-            _handleOpenMoreDropdown() {
-                this.$.menuMoreDropdown.open();
-            }
+
 
             // --- Cruddy Locator
             // --- ---------------------------
@@ -314,6 +322,17 @@ Custom property                          | Description                  | Defaul
             // --- Layout Api
             // --- ---------------------------
 
+            /**
+             * Clear the cache of Cruddy Elements
+             */
+            clearCacheCruddyElements() {
+                this._cruddyElements = undefined;
+            }
+
+            /**
+             * Request closing the page.
+             * Is fire an event for requesting closing
+             */
             close() {
                 if (this.isDirty()) {
                     this.openDialogSaveOrDismiss();
@@ -322,6 +341,9 @@ Custom property                          | Description                  | Defaul
                 }
             }
 
+            /**
+             * Force close pages
+             */
             closeForce() {
                 this._fireEventClose('close');
             }
@@ -342,7 +364,9 @@ Custom property                          | Description                  | Defaul
                 });
             }
 
-
+            /**
+             * @event earth-layout-close
+             */
             _fireEventClose(action) {
                 const detail = {
                     action
