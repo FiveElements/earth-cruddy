@@ -1,0 +1,72 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+
+<!--
+@group Earth Elements
+@element earth-dropdown-item
+-->
+<dom-module id="earth-dropdown-item">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <paper-icon-item disabled$="[[disabled]]">
+            <iron-icon slot="item-icon" icon="[[icon]]" theme="[[theme]]" src="[[src]]"></iron-icon>
+            <slot></slot>
+        </paper-icon-item>
+    </template>
+
+    <script>
+        /**
+         * `earth-dropdown-item`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class EarthDropdownItem extends Polymer.Element {
+            static get is() {
+                return 'earth-dropdown-item';
+            }
+
+            static get properties() {
+                return {
+                    disabled: {
+                      type: Boolean
+                    },
+                    /**
+                     * The name of the icon to use. The name should be of the form:
+                     * `iconset_name:icon_name`.
+                     */
+                    icon: {
+                        type: String
+                    },
+
+                    /**
+                     * The name of the theme to used, if one is specified by the
+                     * iconset.
+                     */
+                    theme: {
+                        type: String
+                    },
+
+                    /**
+                     * If using iron-icon without an iconset, you can set the src to be
+                     * the URL of an individual icon image file. Note that this will take
+                     * precedence over a given icon attribute.
+                     */
+                    src: {
+                        type: String
+                    },
+                };
+            }
+        }
+
+        window.customElements.define(EarthDropdownItem.is, EarthDropdownItem);
+    </script>
+</dom-module>
