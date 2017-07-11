@@ -28,6 +28,7 @@
         <iron-dropdown id="dropdown" on-tap="_handleSelectItem"
                        vertical-align="[[verticalAlign]]"
                        horizontal-align="[[horizontalAlign]]"
+                       vertical-offset="[[verticalOffset]]"
                        disabled="[[disabled]]"
                        open-animation-config="[[openAnimationConfig]]"
                        close-animation-config="[[closeAnimationConfig]]">
@@ -51,6 +52,10 @@
 
             static get properties() {
                 return {
+                    verticalOffset: {
+                      type: Number,
+                      value: 40
+                    },
                     verticalAlign: {
                         type: String,
                         value: 'top'
