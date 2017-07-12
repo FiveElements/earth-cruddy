@@ -427,7 +427,7 @@ Custom property                          | Description                  | Defaul
              */
             _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-                console.log('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+//                console.log('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
                     // Exclude not wanted search
                     // ----------------------------
