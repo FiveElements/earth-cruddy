@@ -1,11 +1,11 @@
 {
-  "name": "earth-editable-layout",
+  "name": "earth-cruddy",
   "version": "0.0.1",
-  "description": "Earth Editable-layout",
+  "description": "Earth Cruddy layout",
   "main": "index.html",
   "repository": {
     "type": "git",
-    "url": "https://github.com/FiveElements/earth-editable-layout.git"
+    "url": "https://github.com/FiveElements/earth-cruddy.git"
   },
   "directories": {
     "test": "test"
@@ -15,7 +15,7 @@
     "dev": "polymer serve -p 8080 | npm run watch",
     "test": "polymer test",
     "dev-install": "npm install -g bower polymer-cli browser-sync",
-    "watch": "browser-sync start --proxy localhost:8080 --startPath /components/earth-editable-layout/demo/ --files *.html,*.js,demo/*"
+    "watch": "browser-sync start --proxy localhost:8080 --startPath /components/earth-cruddy/demo/ --files *.html,*.js,demo/*"
   },
   "author": "FiveElements",
   "license": "ISC",

@@ -27,7 +27,7 @@
 
 
 <!--
-earth-editable-layout is a complete layout for an air-cruddy elements that manage
+earth-cruddy is a complete layout for an air-cruddy elements that manage
 save, delete, validate and retrieves actions.
 
 ### Example
@@ -35,7 +35,7 @@ save, delete, validate and retrieves actions.
 Add a title to the toolbar.
 
 ```html
-<earth-editable-layout status="{{status}}">
+<earth-cruddy status="{{status}}">
     <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
     <div slot="content">
         <air-cruddy-elasticsearch id="cruddy" data="{{data}}"
@@ -44,7 +44,7 @@ Add a title to the toolbar.
                 <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
         </air-cruddy-elasticsearch>
     </div>
-</earth-editable-layout>
+</earth-cruddy>
 ```
 
 ### Styling
@@ -55,10 +55,10 @@ Custom property                          | Description                  | Defaul
 `--earth-layout-header-text-color`       | Header text color            | --dark-theme-text-color
 
 @group Earth Elements
-@element earth-editable-layout
+@element earth-cruddy
 @demo demo/index.html
 -->
-<dom-module id="earth-editable-layout">
+<dom-module id="earth-cruddy">
     <template>
         <style include="iron-flex iron-flex-alignment">
             :host {
@@ -176,16 +176,16 @@ Custom property                          | Description                  | Defaul
 
     <script>
         /**
-         * `earth-editable-layout`
+         * `earth-cruddy`
          *
          *
          * @customElement
          * @polymer
          * @demo demo/index.html
          */
-        class EarthEditableLayout extends Polymer.Element {
+        class EarthCruddy extends Polymer.Element {
             static get is() {
-                return 'earth-editable-layout';
+                return 'earth-cruddy';
             }
 
             static get properties() {
@@ -469,6 +469,6 @@ Custom property                          | Description                  | Defaul
 
         }
 
-        window.customElements.define(EarthEditableLayout.is, EarthEditableLayout);
+        window.customElements.define(EarthCruddy.is, EarthCruddy);
     </script>
 </dom-module>

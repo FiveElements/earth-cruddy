@@ -1,9 +1,9 @@
 {
-  "name": "earth-editable-layout",
+  "name": "earth-cruddy",
   "private": true,
   "version": "0.0.1",
-  "description": "A Polymer 2 element that manage Edit Layout",
-  "main": "earth-editable-layout.html",
+  "description": "A Polymer 2 element that manage Crud Layout",
+  "main": "earth-cruddy.html",
   "author": [
     "The Five Elements Authors"
   ],
@@ -11,6 +11,7 @@
     "web-components",
     "polymer",
     "five-elements",
+    "air-cruddy",
     "earth-elements",
     "layout",
     "edit"
