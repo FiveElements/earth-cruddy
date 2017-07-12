@@ -20,7 +20,7 @@
     <test-fixture id="BasicTestFixture">
       <template  is="dom-template">
         <earth-cruddy>
-          <paper-input label="Firstname" value="Toto" required></paper-input>
+          <paper-input label="Firstname" value="{{firstname}}" required></paper-input>
           <paper-input label="Lastname" value="{{lastname}}" required></paper-input>
         </earth-cruddy>
       </template>
@@ -44,7 +44,7 @@
                   assert.isFalse(f.validate(), 'Lastname should be not valid');
               });
               test('Valid', function() {
-                  var f = fixture('BasicTestFixture', {lastname: 'ohai thurr'});
+                  var f = fixture('BasicTestFixture', {lastname: 'ohai thurr', firstname: 'ohai thurr'});
                   assert.isTrue(f.validate(), 'Lastname should be valid');
               });
           });

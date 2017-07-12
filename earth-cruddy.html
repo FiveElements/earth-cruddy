@@ -120,7 +120,7 @@ Custom property                          | Description                  | Defaul
 
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
-                                       <!--on-tap="newEntity"></paper-icon-button>-->
+                    <!--on-tap="newEntity"></paper-icon-button>-->
                     <paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"
                                        on-tap="reload"></paper-icon-button>
                     <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
@@ -235,6 +235,14 @@ Custom property                          | Description                  | Defaul
                 this.removeEventListener('air-cruddy-status', this._boundListenerStatusChanged);
             }
 
+            // --- Logs
+            // --- ---------------------------
+
+            logDebug() {
+                if (this.debug) {
+                    console.log(...arguments);
+                }
+            }
 
             // --- Status
             // --- ---------------------------
@@ -245,10 +253,6 @@ Custom property                          | Description                  | Defaul
                 this.status = status;
                 this._handleStatusIsData(status);
                 this._handleStatusEffects(status);
-                console.log('-------------------------------------------------');
-                console.log(JSON.stringify(status));
-                console.log('-------------------------------------------------');
-
             }
 
             _handleStatusIsData(status) {
@@ -293,13 +297,12 @@ Custom property                          | Description                  | Defaul
             }
 
 
-
             // --- Cruddy Locator
             // --- ---------------------------
 
             _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
-                    console.log('_getAirCrudyNodes : ', this.$.content);
+                    this.logDebug('_getAirCrudyNodes : ', this.$.content);
                     const crudies = this._computeFilterNodes(this.$.content, (node) => {
                         let isValid = false;
                         if (node[funcName]) {
@@ -354,6 +357,7 @@ Custom property                          | Description                  | Defaul
             save() {
                 return Promise.all(this._callCruddyFunction('save'));
             }
+
             /**
              * Restore the data from with the last request retrieve.
              */
@@ -387,7 +391,7 @@ Custom property                          | Description                  | Defaul
                 const detail = {
                     action
                 };
-                console.log('Fire event earth-layout-close');
+                this.logDebug('Fire event earth-layout-close');
                 this.dispatchEvent(new CustomEvent('earth-layout-close', {detail, bubbles: true, composed: true}));
                 return detail;
             }
@@ -424,7 +428,7 @@ Custom property                          | Description                  | Defaul
              */
             _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-//                console.log('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+//                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
                     // Exclude not wanted search
                     // ----------------------------
