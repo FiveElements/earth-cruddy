@@ -119,8 +119,14 @@ Custom property                          | Description                  | Defaul
 
 
                     <slot name="header-icon"></slot>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]"
+                    <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
+                                       <!--on-tap="newEntity"></paper-icon-button>-->
+                    <paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"
+                                       on-tap="reload"></paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
                                        on-tap="save"></paper-icon-button>
+                    <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
+                                       on-tap="reset"></paper-icon-button>
                     <!-- More menu -->
                     <earth-dropdown-trigger>
                         <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
@@ -159,10 +165,10 @@ Custom property                          | Description                  | Defaul
 
         <paper-dialog id="actions" modal>
             <h2>Dismiss Modification</h2>
-            <p>Document modification voulez vous abandonner les modifications ?</p>
+            <!--<p>Document modification voulez vous abandonner les modifications ?</p>-->
             <div class="buttons">
-                <paper-button dialog-dismiss on-tap="closeForce">Decline</paper-button>
-                <paper-button dialog-confirm autofocus on-tap="saveAndClose">Accept</paper-button>
+                <paper-button dialog-dismiss on-tap="closeForce">Dismiis</paper-button>
+                <paper-button dialog-confirm autofocus on-tap="saveAndClose">Save</paper-button>
             </div>
         </paper-dialog>
 
@@ -206,7 +212,7 @@ Custom property                          | Description                  | Defaul
                      */
                     progressMinMs: {
                         type: Number,
-                        value: 250
+                        value: 300
                     }
                 };
             }
@@ -338,8 +344,31 @@ Custom property                          | Description                  | Defaul
                 this._fireEventClose('close');
             }
 
+            /**
+             * Reload Data from the Server
+             */
+            reload() {
+                return Promise.all(this._callCruddyFunction('retrieve'));
+            }
+
+            /**
+             * Send Save request (create or update) to the Server
+             */
             save() {
                 return Promise.all(this._callCruddyFunction('save'));
+            }
+            /**
+             * Restore the data from with the last request retrieve.
+             */
+            reset() {
+                return Promise.all(this._callCruddyFunction('reset'));
+            }
+
+            /**
+             * Create new empty entity in order to be saved
+             */
+            newEntity() {
+                return Promise.all(this._callCruddyFunction('newEntity'));
             }
 
             saveAndClose() {

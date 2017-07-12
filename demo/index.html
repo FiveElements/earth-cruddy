@@ -26,7 +26,8 @@
             <div slot="content">
                 <h1>Page content</h1>
                 <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
-                                          entity-id="1" debug>
+                                          entity-id="1" debug auto-save>
+                    <!--<div>id : [[data.id]]</div>-->
                     <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
                     <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
                     <paper-input label="Age" value="{{data.age}}" required></paper-input>
@@ -43,7 +44,7 @@
                 <!--<paper-icon-button icon="icons:android"></paper-icon-button>-->
             <!--</div>-->
             <!--<div slot="error">-->
-                <!--<h1>Bye !!!! </h1>-->
+                <!--<h1>MON ERROR Bye !!!! </h1>-->
             <!--</div>-->
         </earth-editable-layout>
     </template>
