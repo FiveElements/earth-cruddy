@@ -10,7 +10,7 @@
     <script src="../../web-component-tester/browser.js"></script>
 
 
-    <link rel="import" href="../earth-editable-layout.html">
+    <link rel="import" href="../earth-cruddy.html">
 
     <link rel="import" href="../../paper-input/paper-input.html">
 
@@ -19,17 +19,17 @@
 
     <test-fixture id="BasicTestFixture">
       <template  is="dom-template">
-        <earth-editable-layout>
+        <earth-cruddy>
           <paper-input label="Firstname" value="Toto" required></paper-input>
           <paper-input label="Lastname" value="{{lastname}}" required></paper-input>
-        </earth-editable-layout>
+        </earth-cruddy>
       </template>
     </test-fixture>
 
 
     <script>
       //  ',,,,,c ∞◊◊  wn;iıŒLU;K,                                ,G<BHNK,;= '
-      suite('earth-editable-layout', function() {
+      suite('earth-cruddy', function() {
 
         test('instantiating the element with default properties works', function() {
           var element = fixture('BasicTestFixture');
