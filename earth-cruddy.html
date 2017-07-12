@@ -264,7 +264,7 @@ Custom property                          | Description                  | Defaul
                 if (tracing && tracing.processing) {
                     this.progress = true;
                 } else {
-                    const progressMissingMs = this.progressMinMs - tracing.processingMs;
+                    const progressMissingMs = tracing ? this.progressMinMs - tracing.processingMs : 0;
                     if (progressMissingMs > 0) {
                         this._debouncerProgress = Polymer.Debouncer.debounce(
                             this._debouncerProgress, // initially undefined
@@ -292,9 +292,6 @@ Custom property                          | Description                  | Defaul
                 this.$.actions.open();
             }
 
-            _handleToggleProgress() {
-                this.progress = !this.progress;
-            }
 
 
             // --- Cruddy Locator
