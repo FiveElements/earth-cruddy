@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>earth-cruddy demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../earth-cruddy.html">
+
+    <link rel="import" href="../../paper-dialog/paper-dialog.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../../paper-input/paper-input.html">
+
+
+    <link rel="import" href="../../air-cruddy/air-cruddy-elasticsearch.html">
+
+    <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+            paper-dialog {
+                background-color: tomato;
+                width: 600px;
+                height: 600px;
+            }
+
+        </style>
+    </custom-style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Basic earth-cruddy demo</h3>
+    <demo-snippet>
+        <dom-bind>
+        <template>
+            <paper-button onclick="dialog.open()">Dialog</paper-button>
+
+            <paper-dialog id="dialog" >
+                <earth-cruddy status="{{status}}">
+                    <div slot="title">Lorem ipsum dolor sit amet,</div>
+                    <div slot="content">
+                        <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
+                                                  entity-id="1" debug auto-save>
+                            <!--<div>id : [[data.id]]</div>-->
+                            <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
+                            <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
+                            <paper-input label="Age" value="{{data.age}}" ></paper-input>
+                        </air-cruddy-elasticsearch>
+                        <sample-content size="10"></sample-content>
+                    </div>
+                </earth-cruddy>
+            </paper-dialog>
+
+        </template>
+        </dom-bind>
+    </demo-snippet>
+</div>
+</body>
+</html>
