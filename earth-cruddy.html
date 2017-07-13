@@ -221,16 +221,23 @@ Custom property                          | Description                  | Defaul
             constructor() {
                 super();
                 this._boundListenerStatusChanged = this._handleStatusChanged.bind(this);
+                this._boundListenerRequestResponse = this._handleRequestResponse.bind(this);
             }
 
             connectedCallback() {
                 super.connectedCallback();
                 this.addEventListener('air-cruddy-status', this._boundListenerStatusChanged);
+                this.addEventListener('air-cruddy-request', this._boundListenerRequestResponse);
+                this.addEventListener('air-cruddy-response', this._boundListenerRequestResponse);
+                this.addEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
             disconnectedCallback() {
                 super.disconnectedCallback();
                 this.removeEventListener('air-cruddy-status', this._boundListenerStatusChanged);
+                this.removeEventListener('air-cruddy-request', this._boundListenerRequestResponse);
+                this.removeEventListener('air-cruddy-response', this._boundListenerRequestResponse);
+                this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
             // --- Logs
@@ -257,7 +264,11 @@ Custom property                          | Description                  | Defaul
                 const status = detail.status;
                 this.status = status;
                 this._handleStatusIsData(status);
-                this._handleStatusEffects(status);
+
+            }
+            _handleRequestResponse(e) {
+                const detail = e.detail;
+                this._handleStatusEffects(detail.info);
             }
 
             _handleStatusIsData(status) {
@@ -268,8 +279,8 @@ Custom property                          | Description                  | Defaul
                 }
             }
 
-            _handleStatusEffects(status) {
-                const tracing = status.tracing;
+            _handleStatusEffects(tracing) {
+
                 if (tracing && tracing.processing) {
                     this.progress = true;
                 } else {
