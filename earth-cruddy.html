@@ -120,7 +120,7 @@ Custom property                          | Description                  | Defaul
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
                     <!--on-tap="newEntity"></paper-icon-button>-->
                     <!--<paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"-->
-                                       <!--on-tap="reload"></paper-icon-button>-->
+                    <!--on-tap="reload"></paper-icon-button>-->
                     <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
                                        on-tap="save"></paper-icon-button>
                     <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
@@ -266,6 +266,7 @@ Custom property                          | Description                  | Defaul
                 this._handleStatusIsData(status);
 
             }
+
             _handleRequestResponse(e) {
                 const detail = e.detail;
                 this._handleStatusEffects(detail.info);
@@ -280,7 +281,6 @@ Custom property                          | Description                  | Defaul
             }
 
             _handleStatusEffects(tracing) {
-
                 if (tracing && tracing.processing) {
                     this.progress = true;
                 } else {
@@ -362,6 +362,7 @@ Custom property                          | Description                  | Defaul
 
             /**
              * Reload Data from the Server
+             * @return {Promise}
              */
             reload() {
                 return Promise.all(this._callCruddyFunction('retrieve'));
@@ -369,31 +370,37 @@ Custom property                          | Description                  | Defaul
 
             /**
              * Send Save request (create or update) to the Server
+             * @return {Promise}
              */
             save() {
                 return Promise.all(this._callCruddyFunction('save'));
             }
 
-            /**
-             * Restore the data from with the last request retrieve.
-             */
-            reset() {
-                return Promise.all(this._callCruddyFunction('reset'));
-            }
 
             /**
              * Create new empty entity in order to be saved
+             *
+             * @return {Promise}
              */
             newEntity() {
                 return Promise.all(this._callCruddyFunction('newEntity'));
             }
 
+            /**
+             * Save call on the persistence layer and the the Event to close the page.
+             * @return {Promise}
+             */
             saveAndClose() {
                 this.save().then(() => {
                     return this._fireEventClose('save');
                 });
             }
 
+            /**
+             * Delete call on the persistence layer.
+             *
+             * @return {Promise}
+             */
             delete() {
                 return Promise.all(this._callCruddyFunction('delete')).then(() => {
                     return this._fireEventClose('delete');
@@ -401,6 +408,8 @@ Custom property                          | Description                  | Defaul
             }
 
             /**
+             * Fire an event to notify the close of this page.
+             *
              * @event earth-layout-close
              */
             _fireEventClose(action) {
@@ -412,23 +421,106 @@ Custom property                          | Description                  | Defaul
                 return detail;
             }
 
+            // --- Layout Api for Reset and restore
+            // --- ---------------------------
+            /**
+             * Restore the data from with the last request retrieve.
+             * @return {Promise}
+             */
+            reset() {
+                return this._callCruddyFunctionResolved('reset')
+                    .then(resetSnapshots => {
+                        this.resetSnapshots = resetSnapshots;
+                        return resetSnapshots;
+                    }).then(resetSnapshots => {
+                            // Open Toast
+                            return resetSnapshots;
+                        }
+                    );
+            }
+
+            restoreResetSnapshot() {
+                const resetSnapshots = this.resetSnapshots;
+                this.resetSnapshots = undefined;
+                return this._restoreResetSnapshot(resetSnapshots);
+            }
+
+            _restoreResetSnapshot(resetSnapshots) {
+                if (resetSnapshots && resetSnapshots.length > 0) {
+                    return resetSnapshots.forEach(snapshotNode => {
+                        return this._callNodeFunction(snapshotNode.callNode, 'restoreState', snapshotNode.callResult);
+                    });
+                }
+            }
+
 
             // --- Cruddy Action
             // --- ---------------------------
+
             /**
-             * Call a function name on an AirCruddyElements
+             * Call a function name on an AirCruddyElements elements and return the exploitable result.
+             * @param funcName The function name to call in airCruddyElements Nodes
+             * @param funcParams The parameter to add to the function Call
+             * @return [obejct] A call result {callNode, callFuncName, callResult}
              */
-            _callCruddyFunction(funcName) {
+            _callCruddyFunctionResolved(funcName, funcParams) {
                 // Search the marking pai
                 const cruddyElts = this._getAirCrudyNodes('airCruddyElements');
-                const restults = cruddyElts.map((elt) => {
-                    if (typeof elt[funcName] === 'function') {
-                        return elt[funcName]();
+                const results = this._callNodesFunction(cruddyElts, funcName, funcParams);
+                return Promise.all(results).then(callResults => {
+                    let result = [];
+                    for (let i = 0; i < callResults.length; i++) {
+                        const resultLine = {
+                            callNode: cruddyElts[i],
+                            callFuncName: funcName,
+                            callResult: callResults[i],
+                        };
+                        result.push(resultLine);
                     }
+                    return result;
                 });
-                return restults;
             }
 
+            /**
+             * Call a function name on an AirCruddyElements elements
+             * @param funcName The function name to call in airCruddyElements Nodes
+             * @param funcParams The parameter to add to the function Call
+             * @return [array] A array of the result of the call function
+             */
+            _callCruddyFunction(funcName, funcParams) {
+                // Search the marking pai
+                const cruddyElts = this._getAirCrudyNodes('airCruddyElements');
+                const results = this._callNodesFunction(cruddyElts, funcName, funcParams);
+                return results;
+            }
+
+            /**
+             * Call a function name on an node elements
+             * @param elements The nodes where the function is present
+             * @param funcName The function name to call in Node
+             * @param funcParams The parameter to add to the function Call
+             * @return [array] A array of the result of the call function
+             */
+            _callNodesFunction(elements, funcName, funcParams) {
+                return elements.map((elt) => {
+                    return this._callNodeFunction(elt, funcName, funcParams);
+                });
+            }
+
+            /**
+             * Call a function name on an node elements
+             * @param elements The node where the function is present
+             * @param funcName The function name to call in Node
+             * @param funcParams The parameter to add to the function Call
+             * @return {object} the result of the call function
+             */
+            _callNodeFunction(elt, funcName, funcParams) {
+                if (typeof elt[funcName] === 'function') {
+                    const callFunc = elt[funcName];
+                    const callReturn = callFunc.call(elt, funcParams);
+                    return callReturn;
+                }
+            }
 
             // --- Utils
             // --- ---------------------------
