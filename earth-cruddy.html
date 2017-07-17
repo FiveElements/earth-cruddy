@@ -10,8 +10,9 @@
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
-<link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 
 
 <link rel="import" href="../app-layout/app-drawer/app-drawer.html">
@@ -93,6 +94,12 @@ Custom property                          | Description                  | Defaul
 
             }
 
+            .toast-button {
+                text-transform: none;
+                /*color: #eeff41;*/
+                color:  var(--paper-yellow-500);
+            }
+
             /*app-drawer-layout:not([narrow]) [drawer-toggle] {*/
             /*display: none;*/
             /*}*/
@@ -111,9 +118,10 @@ Custom property                          | Description                  | Defaul
         <app-header-layout id="headerLayout" fullbleed>
 
             <app-header slot="header" condenses fixed effects="waterfall">
+                <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <div main-title on-tap="resetLayout">
+                    <div condensed-title>
                         <slot name="title"></slot>
                     </div>
                     <slot name="header-icon"></slot>
@@ -121,6 +129,7 @@ Custom property                          | Description                  | Defaul
                     <!--on-tap="newEntity"></paper-icon-button>-->
                     <!--<paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"-->
                     <!--on-tap="reload"></paper-icon-button>-->
+
                     <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
                                        on-tap="save"></paper-icon-button>
                     <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
@@ -170,22 +179,30 @@ Custom property                          | Description                  | Defaul
             </div>
         </paper-dialog>
 
+        <paper-toast id="toastUndoReset" class="fit-bottom" duration="3000" text="Reset" on-iron-overlay-closed="_handleToastUndoReset">
+            <!--<div class="horizontal layout self-stretch">-->
+                <!--<div>Reset</div>-->
+                <!--<div class="flex"></div>-->
+                <paper-button on-tap="_handleToastUndoResetActionUndo" class="toast-button">Undo</paper-button>
+            <!--</div>-->
+        </paper-toast>
+
     </template>
 
     <script>
         /**
          * `earth-cruddy`
          *
-         *
-         * @customElement
-         * @polymer
-         * @demo demo/index.html
          */
         class EarthCruddy extends Polymer.Element {
             static get is() {
                 return 'earth-cruddy';
             }
 
+            _handleToastUndoResetActionUndo() {
+                this.$.toastUndoReset.close();
+                this.restoreResetSnapshot();
+            }
             static get properties() {
                 return {
                     isData: {
@@ -215,6 +232,9 @@ Custom property                          | Description                  | Defaul
                 };
             }
 
+            _handleToastUndoReset(e){
+                console.log('-------- _handleToastUndoReset', e);
+            }
 
             // --- Life Cycle
             // --- ---------------------------
@@ -433,7 +453,7 @@ Custom property                          | Description                  | Defaul
                         this.resetSnapshots = resetSnapshots;
                         return resetSnapshots;
                     }).then(resetSnapshots => {
-                            // Open Toast
+                            this.$.toastUndoReset.open();
                             return resetSnapshots;
                         }
                     );
