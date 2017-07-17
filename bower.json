@@ -41,7 +41,8 @@
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "air-cruddy": "FiveElements/air-cruddy#master",
-    "paper-input": "PolymerElements/paper-input#^2.0.1"
+    "paper-input": "PolymerElements/paper-input#^2.0.1",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0",

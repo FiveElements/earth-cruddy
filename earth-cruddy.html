@@ -68,11 +68,19 @@ Custom property                          | Description                  | Defaul
                 background-color: var(--light-theme-background-color);
             }
 
-            app-toolbar {
-                background: var(--earth-layout-header-background-color, var(--primary-color));
+
+            app-header {
+                background-color: #0b8043;
                 color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
-                /*@apply (--layout-flex);*/
+                --app-header-background-front-layer: {
+                    background-color:  var(--earth-layout-header-background-color, var(--primary-color));
+                };
             }
+
+            /*app-toolbar {*/
+                /*background: var(--earth-layout-header-background-color, var(--primary-color));*/
+                /*color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));*/
+            /*}*/
 
             app-header paper-icon-button {
                 --paper-icon-button-ink-color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
@@ -82,10 +90,13 @@ Custom property                          | Description                  | Defaul
                 width: 100%;
             }
 
-            /*[main-title] {*/
-            /*@apply (--paper-font-title);*/
+            /*div[main-title] {*/
+                /*pointer-events: none;*/
+                /*@apply --layout-flex;*/
             /*}*/
+
             :host ::slotted([slot=title]) {
+                @apply --layout-flex;
                 @apply (--paper-font-title);
             }
 
@@ -117,11 +128,13 @@ Custom property                          | Description                  | Defaul
 
         <app-header-layout id="headerLayout" fullbleed>
 
-            <app-header slot="header" condenses fixed effects="waterfall">
+            <app-header slot="header" condenses fixed effects="resize-title blend-background waterfall">
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <div condensed-title>
+                    <div main-title>
+                        <!--<h4 condensed-title>Contacts <i>&mdash; Summary</i></h4>-->
+                        <!--<h4 main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></h4>-->
                         <slot name="title"></slot>
                     </div>
                     <slot name="header-icon"></slot>
@@ -144,8 +157,14 @@ Custom property                          | Description                  | Defaul
                             <slot name="dropdown"></slot>
                         </div>
                     </earth-dropdown-trigger>
+                    <paper-progress bottom-item id="progress" indeterminate="[[progress]]"></paper-progress>
 
                 </app-toolbar>
+                <!--<app-toolbar class="tall">-->
+                    <!--<h1 main-title> COntact is Open xxxx soskos saksaok-->
+                        <!--&lt;!&ndash;<slot name="title"></slot>&ndash;&gt;-->
+                    <!--</h1>-->
+                <!--</app-toolbar>-->
                 <!--<app-toolbar>-->
                 <!--<h4 condensed-title>App name condensed</h4>-->
                 <!--</app-toolbar>-->
@@ -155,7 +174,6 @@ Custom property                          | Description                  | Defaul
                 <!--</app-toolbar>-->
             </app-header>
             <div>
-                <paper-progress id="progress" indeterminate="[[progress]]"></paper-progress>
 
                 <template is="dom-if" if="[[status.tracing.error]]">
                     <slot id="error" name="error">
@@ -179,12 +197,16 @@ Custom property                          | Description                  | Defaul
             </div>
         </paper-dialog>
 
-        <paper-toast id="toastUndoReset" class="fit-bottom" duration="3000" text="Reset" on-iron-overlay-closed="_handleToastUndoReset">
+        <paper-toast id="toastUndoReset"  duration="3000" text="Reset" horizontal-align="auto">
             <!--<div class="horizontal layout self-stretch">-->
                 <!--<div>Reset</div>-->
                 <!--<div class="flex"></div>-->
                 <paper-button on-tap="_handleToastUndoResetActionUndo" class="toast-button">Undo</paper-button>
             <!--</div>-->
+        </paper-toast>
+
+        <paper-toast id="toastSaveOrDismiss" duration="0" text="Dismiss modification" >
+            <paper-button on-tap="_handleToastSaveOrDismissActionSave" class="toast-button">Save modification</paper-button>
         </paper-toast>
 
     </template>
@@ -199,10 +221,7 @@ Custom property                          | Description                  | Defaul
                 return 'earth-cruddy';
             }
 
-            _handleToastUndoResetActionUndo() {
-                this.$.toastUndoReset.close();
-                this.restoreResetSnapshot();
-            }
+
             static get properties() {
                 return {
                     isData: {
@@ -232,9 +251,6 @@ Custom property                          | Description                  | Defaul
                 };
             }
 
-            _handleToastUndoReset(e){
-                console.log('-------- _handleToastUndoReset', e);
-            }
 
             // --- Life Cycle
             // --- ---------------------------
@@ -332,6 +348,36 @@ Custom property                          | Description                  | Defaul
                 this.$.actions.open();
             }
 
+            // --- Toast
+            // --- ---------------------------
+
+
+            _handleToastUndoResetActionUndo() {
+                this.$.toastUndoReset.close();
+                this.restoreResetSnapshot();
+            }
+
+            openToastUndoReset() {
+                this.$.toastUndoReset.open();
+            }
+
+            openToastSaveOrDismiss() {
+                this.$.toastSaveOrDismiss.open();
+                // Close Async
+                this._debouncerToastSaveOrDismiss = Polymer.Debouncer.debounce(
+                    this._debouncerToastSaveOrDismiss, // initially undefined
+                    Polymer.Async.timeOut.after(3000),
+                    () => {
+                        this.$.toastSaveOrDismiss.close();
+                        this._reset();
+                        this.closeForce();
+                    });
+            }
+            _handleToastSaveOrDismissActionSave() {
+                this.$.toastSaveOrDismiss.close();
+                this._debouncerToastUndoReset.cancel();
+                this.saveAndClose();
+            }
 
             // --- Cruddy Locator
             // --- ---------------------------
@@ -367,7 +413,8 @@ Custom property                          | Description                  | Defaul
              */
             close() {
                 if (this.isDirty()) {
-                    this.openDialogSaveOrDismiss();
+                    this.openToastSaveOrDismiss();
+//                    this.openDialogSaveOrDismiss();
                 } else {
                     this.closeForce();
                 }
@@ -437,26 +484,32 @@ Custom property                          | Description                  | Defaul
                     action
                 };
                 this.logDebug('Fire event earth-layout-close');
+                console.log('------------- Fire event earth-layout-close -------------');
                 this.dispatchEvent(new CustomEvent('earth-layout-close', {detail, bubbles: true, composed: true}));
                 return detail;
             }
 
             // --- Layout Api for Reset and restore
             // --- ---------------------------
+
             /**
              * Restore the data from with the last request retrieve.
              * @return {Promise}
              */
             reset() {
+                return this._reset().then(resetSnapshots => {
+                            this.openToastUndoReset();
+                            return resetSnapshots;
+                        }
+                    );
+            }
+
+            _reset() {
                 return this._callCruddyFunctionResolved('reset')
                     .then(resetSnapshots => {
                         this.resetSnapshots = resetSnapshots;
                         return resetSnapshots;
-                    }).then(resetSnapshots => {
-                            this.$.toastUndoReset.open();
-                            return resetSnapshots;
-                        }
-                    );
+                    });
             }
 
             restoreResetSnapshot() {

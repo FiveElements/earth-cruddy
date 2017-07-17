@@ -21,8 +21,8 @@
 <body unresolved>
 <dom-bind>
     <template>
-        <earth-cruddy status="{{status}}">
-            <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit [[data.firstname]]</div>
+        <earth-cruddy status="{{status}}" debug>
+            <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
             <div slot="content">
                 <h1>Page content</h1>
                 <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
@@ -30,10 +30,10 @@
                     <!--<div>id : [[data.id]]</div>-->
                     <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
                     <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
-                    <paper-input label="Age" value="{{data.age}}" required></paper-input>
+                    <paper-input label="Age" value="{{data.age}}" error-message="Obligatoire" required></paper-input>
                 </air-cruddy-elasticsearch>
                 <sample-content size="10"></sample-content>
-                <div>End sample</div>
+                <!--<div>End sample</div>-->
             </div>
             <!--<div slot="dropdown">-->
                 <!--<earth-dropdown-item icon="icons:refresh">Refresh</earth-dropdown-item>-->
