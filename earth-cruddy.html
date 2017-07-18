@@ -145,7 +145,7 @@ Custom property                          | Description                  | Defaul
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
                     <!--<div main-title>-->
-                    <h4 condensed-title>Contacts <i>&mdash; Summary</i></h4>
+                    <h4 id="condensedTitle" condensed-title>Contacts <i>&mdash; Summary</i></h4>
                     <!--<h4 main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></h4>-->
                     <!--<div main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></div>-->
                     <!--<dev main-title><slot name="title"></slot></i></dev>-->
@@ -176,7 +176,7 @@ Custom property                          | Description                  | Defaul
 
                 </app-toolbar>
                 <app-toolbar class="tall">
-                    <h1 main-title> Contact</h1>
+                    <h1 id="mainTitle" main-title>Contact</h1>
                     <!--<slot main-title name="main-title"></slot>-->
                     <template is="dom-if" if="[[progress]]">
                         <paper-progress bottom-item id="progress"   indeterminate="[[progress]]"></paper-progress>
@@ -198,11 +198,12 @@ Custom property                          | Description                  | Defaul
                     </slot>
                 </template>
 
-                <!--<template is="dom-if" if="[[isData]]">-->
-                <!--<div>-->
-                    <slot  id="content" name="content"></slot>
-                <!--</div>-->
-                <!--</template>-->
+
+                <template  is="dom-if" if="[[isData]]">
+                    <div>
+                        <slot  id="content" name="content"></slot>
+                    </div>
+                </template>
             </div>
 
         </app-header-layout>
@@ -239,22 +240,29 @@ Custom property                          | Description                  | Defaul
 
             static get properties() {
                 return {
-                    isData: {
+                    debug: {
                         type: Boolean,
                         value: true
+                    },
+                    isData: {
+                        type: Boolean,
+                        value: true,
+                        notify: true
                     },
                     /**
                      * The air cruddy status
                      */
                     status: {
-                        type: Object
+                        type: Object,
+                        notify: true
                     },
                     /**
                      * The progess is running
                      */
                     progress: {
                         type: Boolean,
-                        value: false
+                        value: false,
+                        notify: true
                     },
                     /**
                      * The progress min time in ms.
@@ -290,6 +298,11 @@ Custom property                          | Description                  | Defaul
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
+            ready() {
+                super.ready();
+                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
+                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
+            }
 
             // --- Key Bindings
             // --- ---------------------------
@@ -415,8 +428,10 @@ Custom property                          | Description                  | Defaul
             _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
                    console.log('_getAirCrudyNodes : content= ', this.$.content);
+                   console.log('_getAirCrudyNodes : this.shadowRoot.querySelector content= ', this.shadowRoot.querySelector('#content'));
                     this.logDebug('_getAirCrudyNodes : ', this.$.content);
-                    const crudies = this._computeFilterNodes(this.$.content, (node) => {
+                    const contentNode = this.$.content ||  this.shadowRoot.querySelector('#content');
+                    const crudies = this._computeFilterNodes(contentNode, (node) => {
                         let isValid = false;
                         if (node[funcName]) {
                             isValid = true;
@@ -642,7 +657,7 @@ Custom property                          | Description                  | Defaul
              */
             _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-//                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
                     // Exclude not wanted search
                     // ----------------------------
