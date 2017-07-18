@@ -15,7 +15,6 @@
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../paper-toast/paper-toast.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 
 
@@ -93,6 +92,9 @@ Custom property                          | Description                  | Defaul
 
             paper-progress {
                 width: 100%;
+                /*--paper-progress-container: {*/
+                    /*z-index: 0;*/
+                /*}*/
             }
 
             /*div[main-title] {*/
@@ -160,6 +162,7 @@ Custom property                          | Description                  | Defaul
                     <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
                                        on-tap="save">
                     </paper-icon-button>
+                    <!--<paper-button on-tap="save">Save</paper-button>-->
                     <!-- More menu -->
                     <earth-dropdown-trigger>
                         <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
@@ -173,11 +176,12 @@ Custom property                          | Description                  | Defaul
 
                 </app-toolbar>
                 <app-toolbar class="tall">
-                    <h1 main-title> Contact
-                        <!--<slot name="title"></slot>-->
-                    </h1>
+                    <h1 main-title> Contact</h1>
+                    <!--<slot main-title name="main-title"></slot>-->
+                    <template is="dom-if" if="[[progress]]">
+                        <paper-progress bottom-item id="progress"   indeterminate="[[progress]]"></paper-progress>
+                    </template>
                 </app-toolbar>
-                <paper-progress bottom-item id="progress" indeterminate="[[progress]]"></paper-progress>
                 <!--<app-toolbar>-->
                 <!--<h4 condensed-title>App name condensed</h4>-->
                 <!--</app-toolbar>-->
@@ -195,25 +199,23 @@ Custom property                          | Description                  | Defaul
                 </template>
 
                 <!--<template is="dom-if" if="[[isData]]">-->
-                <slot id="content" name="content"></slot>
+                <!--<div>-->
+                    <slot  id="content" name="content"></slot>
+                <!--</div>-->
                 <!--</template>-->
             </div>
 
         </app-header-layout>
 
+
+        <!-- Notification -->
         <paper-dialog id="actions" modal>
             <h2>Dismiss Modification</h2>
-            <!--<p>Document modification voulez vous abandonner les modifications ?</p>-->
             <div class="buttons">
                 <paper-button dialog-dismiss on-tap="closeForce">Dismiis</paper-button>
                 <paper-button dialog-confirm autofocus on-tap="saveAndClose">Save</paper-button>
             </div>
         </paper-dialog>
-
-        <!--<paper-toast id="toastUndoReset" duration="3000" text="Reset" horizontal-align="auto">-->
-        <!--<div class="flex"></div>-->
-        <!--<paper-button on-tap="_handleToastUndoResetActionUndo" class="toast-button">Undo</paper-button>-->
-        <!--</paper-toast>-->
 
         <earth-toast-action id="toastUndoReset" text="Reset" action="Undo"
                             on-earth-toast-confirm="restoreResetSnapshot">
@@ -350,6 +352,7 @@ Custom property                          | Description                  | Defaul
             }
 
             _handleRequestResponse(e) {
+                console.log('--- Handle cruddy response', e);
                 const detail = e.detail;
                 this._handleStatusEffects(detail.info);
             }
@@ -411,6 +414,7 @@ Custom property                          | Description                  | Defaul
 
             _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
+                   console.log('_getAirCrudyNodes : content= ', this.$.content);
                     this.logDebug('_getAirCrudyNodes : ', this.$.content);
                     const crudies = this._computeFilterNodes(this.$.content, (node) => {
                         let isValid = false;
@@ -440,8 +444,8 @@ Custom property                          | Description                  | Defaul
              */
             close() {
                 if (this.isDirty()) {
-                    this.openToastSaveOrDismiss();
-//                    this.openDialogSaveOrDismiss();
+//                    this.openToastSaveOrDismiss();
+                    this.openDialogSaveOrDismiss();
                 } else {
                     this.closeForce();
                 }

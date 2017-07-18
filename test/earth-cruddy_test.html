@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
@@ -14,43 +14,51 @@
 
     <link rel="import" href="../../paper-input/paper-input.html">
 
-  </head>
-  <body>
+</head>
+<body>
 
-    <test-fixture id="BasicTestFixture">
-      <template  is="dom-template">
+<test-fixture id="BasicTestFixture">
+    <template is="dom-template">
         <earth-cruddy>
-          <paper-input label="Firstname" value="{{firstname}}" required></paper-input>
-          <paper-input label="Lastname" value="{{lastname}}" required></paper-input>
+            <div slot="title">Lorem ipsum dolor sit amet</div>
+            <div slot="content">
+                <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
+                                          entity-id="1" debug>
+                    <paper-input label="Firstname" value="{{firstname}}" required></paper-input>
+                    <paper-input label="Lastname" value="{{lastname}}" required></paper-input>
+                </air-cruddy-elasticsearch>
+            </div>
         </earth-cruddy>
-      </template>
-    </test-fixture>
+    </template>
+</test-fixture>
 
 
-    <script>
-      //  ',,,,,c ∞◊◊  wn;iıŒLU;K,                                ,G<BHNK,;= '
-      suite('earth-cruddy', function() {
+<script>
+    //  ',,,,,c ∞◊◊  wn;iıŒLU;K,                                ,G<BHNK,;= '
+    suite('earth-cruddy', function () {
 
-        test('instantiating the element with default properties works', function() {
-          var element = fixture('BasicTestFixture');
-            assert.isFalse(element.validate());
-            assert.equal(element._validateElements.length, 2);
+        test('instantiating the element with default properties works', function () {
+            var element = fixture('BasicTestFixture');
+
+            var elementShadowRoot = element.shadowRoot;
+            var elementHeader = elementShadowRoot.querySelector('h2');
+            assert.equal(elementHeader.innerHTML, 'Lorem ipsum dolor sit amet!');
 
         });
 
-          suite('validate', function() {
-              test('Not valid', function() {
-                  var f = fixture('BasicTestFixture');
-                  assert.isFalse(f.validate(), 'Lastname should be not valid');
-              });
-              test('Valid', function() {
-                  var f = fixture('BasicTestFixture', {lastname: 'ohai thurr', firstname: 'ohai thurr'});
-                  assert.isTrue(f.validate(), 'Lastname should be valid');
-              });
-          });
+        suite('validate', function () {
+            test('Not valid', function () {
+                var f = fixture('BasicTestFixture');
+                assert.isFalse(f.validate(), 'Lastname should be not valid');
+            });
+            test('Valid', function () {
+                var f = fixture('BasicTestFixture', {lastname: 'ohai thurr', firstname: 'ohai thurr'});
+                assert.isTrue(f.validate(), 'Lastname should be valid');
+            });
+        });
 
-      });
-    </script>
+    });
+</script>
 
-  </body>
+</body>
 </html>
