@@ -371,7 +371,7 @@ Custom property                          | Description                  | Defaul
             }
 
             _handleStatusIsData(status) {
-                if (status && status.mode && (status.mode !== 'unset')) {
+                if (status && (status.mode !== 'unset')) {
                     this.isData = true;
                 } else {
                     this.isData = false;
