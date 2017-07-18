@@ -3,10 +3,14 @@
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
 
 <link rel="import" href="../polymer/lib/utils/flattened-nodes-observer.html">
+<link rel="import" href="../polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
+
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
@@ -25,6 +29,8 @@
 
 <link rel="import" href="earth-dropdown-trigger.html">
 <link rel="import" href="earth-dropdown-item.html">
+
+<link rel="import" href="earth-toast-action.html">
 
 
 <!--
@@ -68,18 +74,17 @@ Custom property                          | Description                  | Defaul
                 background-color: var(--light-theme-background-color);
             }
 
-
             app-header {
                 background-color: #0b8043;
                 color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
                 --app-header-background-front-layer: {
-                    background-color:  var(--earth-layout-header-background-color, var(--primary-color));
+                    background-color: var(--earth-layout-header-background-color, var(--primary-color));
                 };
             }
 
             /*app-toolbar {*/
-                /*background: var(--earth-layout-header-background-color, var(--primary-color));*/
-                /*color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));*/
+            /*background: var(--earth-layout-header-background-color, var(--primary-color));*/
+            /*color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));*/
             /*}*/
 
             app-header paper-icon-button {
@@ -91,8 +96,8 @@ Custom property                          | Description                  | Defaul
             }
 
             /*div[main-title] {*/
-                /*pointer-events: none;*/
-                /*@apply --layout-flex;*/
+            /*pointer-events: none;*/
+            /*@apply --layout-flex;*/
             /*}*/
 
             :host ::slotted([slot=title]) {
@@ -105,10 +110,15 @@ Custom property                          | Description                  | Defaul
 
             }
 
+            paper-toast {
+                @apply --layout-horizontal;
+                @apply --layout-center;
+            }
+
             .toast-button {
                 text-transform: none;
                 /*color: #eeff41;*/
-                color:  var(--paper-yellow-500);
+                color: var(--paper-yellow-500);
             }
 
             /*app-drawer-layout:not([narrow]) [drawer-toggle] {*/
@@ -132,21 +142,24 @@ Custom property                          | Description                  | Defaul
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <div main-title>
-                        <!--<h4 condensed-title>Contacts <i>&mdash; Summary</i></h4>-->
-                        <!--<h4 main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></h4>-->
-                        <slot name="title"></slot>
-                    </div>
+                    <!--<div main-title>-->
+                    <h4 condensed-title>Contacts <i>&mdash; Summary</i></h4>
+                    <!--<h4 main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></h4>-->
+                    <!--<div main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></div>-->
+                    <!--<dev main-title><slot name="title"></slot></i></dev>-->
+                    <!--<slot name="title"></slot>-->
+                    <!--</div>-->
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
                     <!--on-tap="newEntity"></paper-icon-button>-->
                     <!--<paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"-->
                     <!--on-tap="reload"></paper-icon-button>-->
 
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
-                                       on-tap="save"></paper-icon-button>
                     <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
                                        on-tap="reset"></paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
+                                       on-tap="save">
+                    </paper-icon-button>
                     <!-- More menu -->
                     <earth-dropdown-trigger>
                         <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
@@ -157,14 +170,14 @@ Custom property                          | Description                  | Defaul
                             <slot name="dropdown"></slot>
                         </div>
                     </earth-dropdown-trigger>
-                    <paper-progress bottom-item id="progress" indeterminate="[[progress]]"></paper-progress>
 
                 </app-toolbar>
-                <!--<app-toolbar class="tall">-->
-                    <!--<h1 main-title> COntact is Open xxxx soskos saksaok-->
-                        <!--&lt;!&ndash;<slot name="title"></slot>&ndash;&gt;-->
-                    <!--</h1>-->
-                <!--</app-toolbar>-->
+                <app-toolbar class="tall">
+                    <h1 main-title> Contact
+                        <!--<slot name="title"></slot>-->
+                    </h1>
+                </app-toolbar>
+                <paper-progress bottom-item id="progress" indeterminate="[[progress]]"></paper-progress>
                 <!--<app-toolbar>-->
                 <!--<h4 condensed-title>App name condensed</h4>-->
                 <!--</app-toolbar>-->
@@ -197,18 +210,18 @@ Custom property                          | Description                  | Defaul
             </div>
         </paper-dialog>
 
-        <paper-toast id="toastUndoReset"  duration="3000" text="Reset" horizontal-align="auto">
-            <!--<div class="horizontal layout self-stretch">-->
-                <!--<div>Reset</div>-->
-                <!--<div class="flex"></div>-->
-                <paper-button on-tap="_handleToastUndoResetActionUndo" class="toast-button">Undo</paper-button>
-            <!--</div>-->
-        </paper-toast>
+        <!--<paper-toast id="toastUndoReset" duration="3000" text="Reset" horizontal-align="auto">-->
+        <!--<div class="flex"></div>-->
+        <!--<paper-button on-tap="_handleToastUndoResetActionUndo" class="toast-button">Undo</paper-button>-->
+        <!--</paper-toast>-->
 
-        <paper-toast id="toastSaveOrDismiss" duration="0" text="Dismiss modification" >
-            <paper-button on-tap="_handleToastSaveOrDismissActionSave" class="toast-button">Save modification</paper-button>
-        </paper-toast>
+        <earth-toast-action id="toastUndoReset" text="Reset" action="Undo"
+                            on-earth-toast-confirm="restoreResetSnapshot">
+        </earth-toast-action>
 
+        <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save"
+                            on-earth-toast-confirm="saveAndClose">
+        </earth-toast-action>
     </template>
 
     <script>
@@ -216,7 +229,7 @@ Custom property                          | Description                  | Defaul
          * `earth-cruddy`
          *
          */
-        class EarthCruddy extends Polymer.Element {
+        class EarthCruddy extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.Element) {
             static get is() {
                 return 'earth-cruddy';
             }
@@ -251,7 +264,6 @@ Custom property                          | Description                  | Defaul
                 };
             }
 
-
             // --- Life Cycle
             // --- ---------------------------
             constructor() {
@@ -275,6 +287,40 @@ Custom property                          | Description                  | Defaul
                 this.removeEventListener('air-cruddy-response', this._boundListenerRequestResponse);
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
+
+
+            // --- Key Bindings
+            // --- ---------------------------
+            get  keyBindings() {
+                return {
+                    'ctrl+s': '_handleKeySave',
+                    'ctrl+z': '_handleKeyUndo',
+                    'ctrl+y': '_handleKeyRedo',
+                    'ctrl+k': '_handleKeyClose'
+                }
+            }
+
+            _handleKeyClose(e) {
+                e.preventDefault();
+                this.close();
+            }
+
+            _handleKeySave(e) {
+                e.preventDefault();
+                this.save();
+            }
+
+            _handleKeyUndo(e) {
+                e.preventDefault();
+                this.reset();
+            }
+
+            _handleKeyRedo(e) {
+                e.preventDefault();
+                this.restoreResetSnapshot();
+                this.$.toastUndoReset.close();
+            }
+
 
             // --- Logs
             // --- ---------------------------
@@ -351,33 +397,14 @@ Custom property                          | Description                  | Defaul
             // --- Toast
             // --- ---------------------------
 
-
-            _handleToastUndoResetActionUndo() {
-                this.$.toastUndoReset.close();
-                this.restoreResetSnapshot();
-            }
-
             openToastUndoReset() {
                 this.$.toastUndoReset.open();
             }
 
             openToastSaveOrDismiss() {
                 this.$.toastSaveOrDismiss.open();
-                // Close Async
-                this._debouncerToastSaveOrDismiss = Polymer.Debouncer.debounce(
-                    this._debouncerToastSaveOrDismiss, // initially undefined
-                    Polymer.Async.timeOut.after(3000),
-                    () => {
-                        this.$.toastSaveOrDismiss.close();
-                        this._reset();
-                        this.closeForce();
-                    });
             }
-            _handleToastSaveOrDismissActionSave() {
-                this.$.toastSaveOrDismiss.close();
-                this._debouncerToastUndoReset.cancel();
-                this.saveAndClose();
-            }
+
 
             // --- Cruddy Locator
             // --- ---------------------------
@@ -498,10 +525,10 @@ Custom property                          | Description                  | Defaul
              */
             reset() {
                 return this._reset().then(resetSnapshots => {
-                            this.openToastUndoReset();
-                            return resetSnapshots;
-                        }
-                    );
+                        this.openToastUndoReset();
+                        return resetSnapshots;
+                    }
+                );
             }
 
             _reset() {
@@ -514,8 +541,10 @@ Custom property                          | Description                  | Defaul
 
             restoreResetSnapshot() {
                 const resetSnapshots = this.resetSnapshots;
-                this.resetSnapshots = undefined;
-                return this._restoreResetSnapshot(resetSnapshots);
+                if (resetSnapshots) {
+                    this.resetSnapshots = undefined;
+                    return this._restoreResetSnapshot(resetSnapshots);
+                }
             }
 
             _restoreResetSnapshot(resetSnapshots) {

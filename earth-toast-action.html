@@ -1,0 +1,133 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<link rel="import" href="../polymer/lib/utils/debounce.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+
+<dom-module id="earth-toast-action">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+            }
+            paper-toast {
+                @apply (--layout-horizontal);
+                @apply (--layout-center);
+            }
+
+            .toast-button {
+                text-transform: none;
+                /*color: #eeff41;*/
+                color: var(--paper-yellow-500);
+            }
+
+        </style>
+
+        <paper-toast id="toastAction" duration="0" text="[[text]]" horizontal-align="auto">
+            <div class="flex"></div>
+            <paper-button on-tap="_handleToastAction" class="toast-button">[[action]]</paper-button>
+        </paper-toast>
+
+    </template>
+
+    <script>
+        /**
+         * `earth-toast-action`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class EarthToastAction extends Polymer.Element {
+            static get is() {
+                return 'earth-toast-action';
+            }
+
+            static get properties() {
+                return {
+                    text: {
+                        type: String
+                    },
+                    action: {
+                        type:String
+                    },
+                    duration: {
+                        type: Number,
+                        value: 3000
+                    }
+                };
+            }
+
+            open() {
+                this.$.toastAction.open();
+                this.fireOpen();
+                // Close Async
+                this._debouncerToastAction = Polymer.Debouncer.debounce(
+                    this._debouncerToastAction, // initially undefined
+                    Polymer.Async.timeOut.after(this.duration),
+                    () => {
+                        this.$.toastAction.close();
+                        this.fireClose();
+                    });
+            }
+
+            close() {
+                this._close();
+                this.fireClose();
+            }
+
+
+            _close() {
+                this.$.toastAction.close();
+                this._debouncerToastAction.cancel();
+            }
+
+
+            _handleToastAction(e) {
+                this._close();
+                this.fireAction();
+            }
+
+            fireOpen(e) {
+                const detail = {
+                    action: 'open'
+                };
+                this.dispatchEvent(new CustomEvent('earth-toast-open', {
+                    detail: detail,
+                    bubbles: true,
+                    composed: true
+                }));
+            }
+
+            fireClose(e) {
+                const detail = {
+                    action: 'close'
+                };
+                this.dispatchEvent(new CustomEvent('earth-toast-close', {
+                    detail: detail,
+                    bubbles: true,
+                    composed: true
+                }));
+            }
+
+            fireAction(e) {
+                const detail = {
+                    action: 'confirm'
+                };
+                this.dispatchEvent(new CustomEvent('earth-toast-confirm', {
+                    detail: detail,
+                    bubbles: true,
+                    composed: true
+                }));
+            }
+        }
+
+        window.customElements.define(EarthToastAction.is, EarthToastAction);
+    </script>
+</dom-module>
