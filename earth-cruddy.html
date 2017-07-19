@@ -144,13 +144,10 @@ Custom property                          | Description                  | Defaul
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <!--<div main-title>-->
-                    <h4 id="condensedTitle" condensed-title>Contacts <i>&mdash; Summary</i></h4>
-                    <!--<h4 main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></h4>-->
-                    <!--<div main-title>Lorem ipsum dolor sit amet, consectetur adipiscing elit <i>&mdash; Summary</i></div>-->
-                    <!--<dev main-title><slot name="title"></slot></i></dev>-->
-                    <!--<slot name="title"></slot>-->
-                    <!--</div>-->
+                    <div main-title>
+                    <!--<h4 id="condensedTitle" condensed-title>Contacts <i>&mdash; Summary</i></h4>-->
+                        <slot name="title"></slot>
+                    </div>
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
                     <!--on-tap="newEntity"></paper-icon-button>-->
@@ -175,13 +172,13 @@ Custom property                          | Description                  | Defaul
                     </earth-dropdown-trigger>
 
                 </app-toolbar>
-                <app-toolbar class="tall">
-                    <h1 id="mainTitle" main-title>Contact</h1>
-                    <!--<slot main-title name="main-title"></slot>-->
-                    <template is="dom-if" if="[[progress]]">
-                        <paper-progress bottom-item id="progress"   indeterminate="[[progress]]"></paper-progress>
-                    </template>
-                </app-toolbar>
+                <!--<app-toolbar class="tall">-->
+                    <!--<h1 id="mainTitle" main-title>Contact</h1>-->
+                    <!--&lt;!&ndash;<slot main-title name="main-title"></slot>&ndash;&gt;-->
+                    <!--<template is="dom-if" if="[[progress]]">-->
+                        <!--<paper-progress bottom-item id="progress"   indeterminate="[[progress]]"></paper-progress>-->
+                    <!--</template>-->
+                <!--</app-toolbar>-->
                 <!--<app-toolbar>-->
                 <!--<h4 condensed-title>App name condensed</h4>-->
                 <!--</app-toolbar>-->
@@ -298,11 +295,11 @@ Custom property                          | Description                  | Defaul
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
-            ready() {
-                super.ready();
-                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
-                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
-            }
+//            ready() {
+//                super.ready();
+//                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
+//                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
+//            }
 
             // --- Key Bindings
             // --- ---------------------------
