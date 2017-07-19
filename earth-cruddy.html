@@ -346,7 +346,6 @@ Custom property                          | Description                  | Defaul
             // --- Layout Apis
             // --- ---------------------------
             resetLayout() {
-                console.log('Rest layout');
                 this.$.headerLayout.resetLayout();
             }
 
@@ -362,7 +361,7 @@ Custom property                          | Description                  | Defaul
             }
 
             _handleRequestResponse(e) {
-                console.log('--- Handle cruddy response', e);
+//                console.log('--- Handle cruddy response', e);
                 const detail = e.detail;
                 this._handleStatusEffects(detail.info);
             }
@@ -424,8 +423,8 @@ Custom property                          | Description                  | Defaul
 
             _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
-                   console.log('_getAirCrudyNodes : content= ', this.$.content);
-                   console.log('_getAirCrudyNodes : this.shadowRoot.querySelector content= ', this.shadowRoot.querySelector('#content'));
+//                   console.log('_getAirCrudyNodes : content= ', this.$.content);
+//                   console.log('_getAirCrudyNodes : this.shadowRoot.querySelector content= ', this.shadowRoot.querySelector('#content'));
                     this.logDebug('_getAirCrudyNodes : ', this.$.content);
                     const contentNode = this.$.content ||  this.shadowRoot.querySelector('#content');
                     const crudies = this._computeFilterNodes(contentNode, (node) => {
