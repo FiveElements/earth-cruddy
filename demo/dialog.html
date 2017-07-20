@@ -13,6 +13,7 @@
     <link rel="import" href="../earth-cruddy.html">
 
     <link rel="import" href="../../paper-dialog/paper-dialog.html">
+    <link rel="import" href="../../paper-dialog-scrollable/paper-dialog-scrollable.html">
     <link rel="import" href="../../paper-button/paper-button.html">
     <link rel="import" href="../../paper-input/paper-input.html">
 
@@ -44,6 +45,7 @@
                 <earth-cruddy status="{{status}}">
                     <div slot="title">Lorem ipsum dolor sit amet,</div>
                     <div slot="content">
+                        <!--<paper-dialog-scrollable>-->
                         <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
                                                   entity-id="1" debug auto-save>
                             <!--<div>id : [[data.id]]</div>-->
@@ -51,7 +53,8 @@
                             <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
                             <paper-input label="Age" value="{{data.age}}" ></paper-input>
                         </air-cruddy-elasticsearch>
-                        <sample-content size="10"></sample-content>
+                        <!--<sample-content size="10"></sample-content>-->
+                        <!--</paper-dialog-scrollable>-->
                     </div>
                 </earth-cruddy>
             </paper-dialog>
