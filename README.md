@@ -1,5 +1,5 @@
 
-# \<earth-cruddy\> 
+# \<earth-cruddy\>  [![Build Status](https://travis-ci.org/FiveElements/earth-cruddy.svg?branch=master)](https://travis-ci.org/FiveElements/earth-cruddy)
 
 
 The earth-cruddy for an layout usable for edition like air-cruddy component
