@@ -20,15 +20,14 @@ The `user-validator` provides
 -->
 
 <dom-module id="demo-edit-layout">
-
-    <style>
-        :host {
-            display: block;
-            width: 70vw;
-            height: 90vh;
-        }
-    </style>
     <template>
+        <style>
+            :host {
+                display: block;
+                width: 70vw;
+                height: 90vh;
+            }
+        </style>
 
         <earth-cruddy>
             <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
@@ -44,7 +43,7 @@ The `user-validator` provides
                 <air-cruddy-elasticsearch data="{{data}}"  url="http://localhost:9200/5elements/5elements"
                             entity-id="1" >
                     <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
-                    <paper-input label="Lastname" value="{{data..lastname}}" required></paper-input>
+                    <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
                 </air-cruddy-elasticsearch>
 
 
