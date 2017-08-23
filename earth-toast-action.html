@@ -28,7 +28,7 @@
 
         </style>
 
-        <paper-toast id="toastAction" duration="0" text="[[text]]" horizontal-align="auto">
+        <paper-toast id="toastAction" duration="0" text="[[text]]" horizontal-align="auto" fit-into="[[fitInto]]">
             <div class="flex"></div>
             <paper-button on-tap="_handleToastAction" class="toast-button">[[action]]</paper-button>
         </paper-toast>
@@ -60,6 +60,9 @@
                     duration: {
                         type: Number,
                         value: 3000
+                    },
+                    fitInto: {
+                        type:Object
                     }
                 };
             }

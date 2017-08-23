@@ -409,10 +409,12 @@ Custom property                                 | Description                  |
             // --- ---------------------------
 
             openToastUndoReset() {
+                this.$.toastUndoReset.fitInto = this.$.headerLayout;
                 this.$.toastUndoReset.open();
             }
 
             openToastSaveOrDismiss() {
+                this.$.toastSaveOrDismiss.fitInto = this.$.headerLayout;
                 this.$.toastSaveOrDismiss.open();
             }
 
