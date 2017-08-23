@@ -400,6 +400,8 @@ Custom property                                 | Description                  |
             // --- Actions
             // --- ---------------------------
             openDialogSaveOrDismiss() {
+                // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
+                document.body.appendChild(this.$.actions);
                 this.$.actions.open();
             }
 
