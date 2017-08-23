@@ -96,15 +96,15 @@ Custom property                                 | Description                  |
                 /*--paper-progress-container-color: var(--earth-layout-header-background-scroll-color, var(--earth-layout-header-background-color, var(--primary-color)));*/
             }
 
-            /*div[main-title] {*/
-            /*pointer-events: none;*/
-            /*@apply --layout-flex;*/
-            /*}*/
-
-            :host ::slotted([slot=title]) {
-                @apply --layout-flex;
+            div[main-title] {
+                @apply (--layout-flex);
                 @apply (--paper-font-title);
             }
+
+            /*:host ::slotted([slot=title]) {*/
+                /*@apply (--layout-flex);*/
+                /*@apply (--paper-font-title);*/
+            /*}*/
 
             :host ::slotted([slot=content]) {
                 @apply (--paper-font-body1);
@@ -112,8 +112,8 @@ Custom property                                 | Description                  |
             }
 
             paper-toast {
-                @apply --layout-horizontal;
-                @apply --layout-center;
+                @apply (--layout-horizontal);
+                @apply (--layout-center);
             }
 
             .toast-button {
@@ -143,12 +143,8 @@ Custom property                                 | Description                  |
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <div main-title>
-                        <slot name="title"></slot>
-                    </div>
-                    <!--<div condensed-title>-->
-                        <!--<slot name="condensed-title"></slot>-->
-                    <!--</div>-->
+                    <div main-title>[[mainTitle]]</div>
+                    <!--<div condensed-title>[[condensed-title]]</div>-->
 
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
@@ -158,9 +154,8 @@ Custom property                                 | Description                  |
 
                     <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
                                        on-tap="reset"></paper-icon-button>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
-                                       on-tap="save">
-                    </paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="Save"
+                                       on-tap="save"></paper-icon-button>
                     <!--<paper-button on-tap="save">Save</paper-button>-->
                     <!-- More menu -->
                     <earth-dropdown-trigger>
@@ -247,21 +242,24 @@ Custom property                                 | Description                  |
                     isData: {
                         type: Boolean,
                         value: true,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The air cruddy status
                      */
                     status: {
                         type: Object,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The air cruddy last response
                      */
                     lastResponse: {
                         type: Object,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The progess is running
@@ -269,7 +267,8 @@ Custom property                                 | Description                  |
                     progress: {
                         type: Boolean,
                         value: false,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The progress min time in ms.
@@ -277,7 +276,17 @@ Custom property                                 | Description                  |
                     progressMinMs: {
                         type: Number,
                         value: 300
-                    }
+                    },
+                    /**
+                     * The Title
+                     */
+                    mainTitle: {
+                        type: String
+                    },
+                    condensedTitle: {
+                        type: String
+                    },
+
                 };
             }
 
@@ -310,9 +319,6 @@ Custom property                                 | Description                  |
                 // Dialog open behing app-header-layout
                 // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
                 document.body.appendChild(this.$.actions);
-                // Test
-//                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
-//                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
             }
 
 //            _bindWithAirCruddy() {
