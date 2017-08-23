@@ -190,9 +190,9 @@ Custom property                                 | Description                  |
             </app-header>
             <div>
 
-                <template is="dom-if" if="[[status.tracing.error]]">
+                <template is="dom-if" if="[[lastResponse.error]]">
                     <slot id="error" name="error">
-                        <h1>Error [[status.tracing.error.status]]</h1>
+                        <h1>Error [[lastResponse.error.status]]</h1>
                     </slot>
                 </template>
 
@@ -247,6 +247,13 @@ Custom property                                 | Description                  |
                      * The air cruddy status
                      */
                     status: {
+                        type: Object,
+                        notify: true
+                    },
+                    /**
+                     * The air cruddy last response
+                     */
+                    lastResponse: {
                         type: Object,
                         notify: true
                     },
@@ -370,8 +377,9 @@ Custom property                                 | Description                  |
             }
 
             _handleRequestResponse(e) {
-//                console.log('--- Handle cruddy response', e);
                 const detail = e.detail;
+//                console.log('--- Handle cruddy response', e, detail);
+                this.lastResponse = detail;
                 this._handleStatusEffects(detail.info);
             }
 
@@ -540,7 +548,7 @@ Custom property                                 | Description                  |
                     action
                 };
                 this.logDebug('Fire event earth-layout-close');
-                console.log('------------- Fire event earth-layout-close -------------');
+//                console.log('------------- Fire event earth-layout-close -------------');
                 this.dispatchEvent(new CustomEvent('earth-layout-close', {detail, bubbles: true, composed: true}));
                 return detail;
             }
@@ -667,7 +675,7 @@ Custom property                                 | Description                  |
              */
             _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+//                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
                     // Exclude not wanted search
                     // ----------------------------
