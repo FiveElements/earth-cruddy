@@ -10,6 +10,7 @@
 
     <link rel="import" href="../earth-cruddy.html">
     <link rel="import" href="sample-content.html">
+    <link rel="import" href="demo-app.html">
 
 
     <link rel="import" href="../../paper-input/paper-input.html">
@@ -20,74 +21,74 @@
 <body unresolved>
 
 
+    <!--<dom-module id="my-element">-->
+        <!--<template>-->
+            <!--<style>-->
+                <!--:host {-->
+                    <!--display: block;-->
+                <!--}-->
+            <!--</style>-->
 
-    <dom-module id="my-element">
-        <template>
-            <style>
-                :host {
-                    display: block;
-                }
-            </style>
+            <!--<earth-cruddy status="{{status}}" debug>-->
+                <!--<div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>-->
+                <!--<div slot="main-title">Lorem ipsum dolor sit amet</div>-->
+                <!--<div slot="content">-->
+                    <!--<h1>Page content</h1>-->
+                    <!--<air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"-->
+                                              <!--entity-id="1"  debug>-->
+                        <!--&lt;!&ndash;<div>id : [[data.id]]</div>&ndash;&gt;-->
+                        <!--<div style="width: 600px">-->
 
-            <earth-cruddy status="{{status}}" debug>
-                <div slot="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
-                <div slot="main-title">Lorem ipsum dolor sit amet</div>
-                <div slot="content">
-                    <h1>Page content</h1>
-                    <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
-                                              entity-id="1"  debug>
-                        <!--<div>id : [[data.id]]</div>-->
-                        <div style="width: 600px">
-
-                            <paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>
-                            <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
-                            <paper-input label="Age" value="{{data.age}}" error-message="L'age est obligatoire" required type="number" allowed-pattern="[0-9]" step="1"></paper-input>
-                        </div>
-                    </air-cruddy-elasticsearch>
-                    <sample-content size="10"></sample-content>
-                    <!--<div>End sample</div>-->
-                </div>
-                <div slot="dropdown">
-                    <earth-dropdown-item icon="icons:refresh">Refresh</earth-dropdown-item>
-                    <earth-dropdown-item icon="icons:add-shopping-cart">Add chart</earth-dropdown-item>
-                </div>
-                <!--<div slot="header-icon">-->
-                <!--<paper-icon-button  icon="icons:alarm"></paper-icon-button>-->
-                <!--<paper-icon-button icon="icons:android"></paper-icon-button>-->
+                            <!--<paper-input label="Firstname" value="{{data.firstname}}" required></paper-input>-->
+                            <!--<paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>-->
+                            <!--<paper-input label="Age" value="{{data.age}}" error-message="L'age est obligatoire" required type="number" allowed-pattern="[0-9]" step="1"></paper-input>-->
+                        <!--</div>-->
+                    <!--</air-cruddy-elasticsearch>-->
+                    <!--<sample-content size="10"></sample-content>-->
+                    <!--&lt;!&ndash;<div>End sample</div>&ndash;&gt;-->
                 <!--</div>-->
-                <!--<div slot="error">-->
-                <!--<h1>MON ERROR Bye !!!! </h1>-->
+                <!--<div slot="dropdown">-->
+                    <!--<earth-dropdown-item icon="icons:refresh">Refresh</earth-dropdown-item>-->
+                    <!--<earth-dropdown-item icon="icons:add-shopping-cart">Add chart</earth-dropdown-item>-->
                 <!--</div>-->
-            </earth-cruddy>
-        </template>
+                <!--&lt;!&ndash;<div slot="header-icon">&ndash;&gt;-->
+                <!--&lt;!&ndash;<paper-icon-button  icon="icons:alarm"></paper-icon-button>&ndash;&gt;-->
+                <!--&lt;!&ndash;<paper-icon-button icon="icons:android"></paper-icon-button>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div slot="error">&ndash;&gt;-->
+                <!--&lt;!&ndash;<h1>MON ERROR Bye !!!! </h1>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</earth-cruddy>-->
+        <!--</template>-->
 
 
 
-        <!-- Uncomment for class syntax -->
-        <script>
-            HTMLImports.whenReady(function() {
-                class MyElement extends Polymer.Element {
-                    static get is() { return 'my-element'; }
-                    static get properties() {
-                        return {
-                            data: {
-                                type: Object,
-                                notify:true
-                            }
-                        }
-                    }
-                    constructor() {
-                        super();
-                    }
-                }
-                customElements.define(MyElement.is, MyElement);
-            });
+        <!--&lt;!&ndash; Uncomment for class syntax &ndash;&gt;-->
+        <!--<script>-->
+            <!--HTMLImports.whenReady(function() {-->
+                <!--class MyElement extends Polymer.Element {-->
+                    <!--static get is() { return 'my-element'; }-->
+                    <!--static get properties() {-->
+                        <!--return {-->
+                            <!--data: {-->
+                                <!--type: Object,-->
+                                <!--notify:true-->
+                            <!--}-->
+                        <!--}-->
+                    <!--}-->
+                    <!--constructor() {-->
+                        <!--super();-->
+                    <!--}-->
+                <!--}-->
+                <!--customElements.define(MyElement.is, MyElement);-->
+            <!--});-->
 
-        </script>
+        <!--</script>-->
 
-    </dom-module>
+    <!--</dom-module>-->
 
-    <my-element></my-element>
+    <!--<my-element></my-element>-->
+    <demo-app></demo-app>
 
 
 

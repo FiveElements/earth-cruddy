@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>earth-cruddy demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="demo-app.html">
+
+    <script src="../../app-layout/app-drawer-layout/app-drawer-layout.html"></script>
+    <script src="../../app-layout/app-drawer/app-drawer.html"></script>
+    <script src="../../app-layout/app-header-layout/app-header-layout.html"></script>
+    <script src="../../app-layout/app-header/app-header.html"></script>
+    <script src="../../app-layout/app-toolbar/app-toolbar.html"></script>
+
+
+</head>
+<body unresolved>
+
+<app-drawer-layout fullbleed>
+
+    <app-drawer slot="drawer">
+        <app-header-layout has-scrolling-region>
+
+            <app-header class="whiteHeader" waterfall fixed slot="header">
+                <app-toolbar>
+                    <div main-title>Inbox</div>
+                </app-toolbar>
+            </app-header>
+
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="inbox" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="favorite" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="polymer" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="question-answer" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="send" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="archive" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="backup" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+            <paper-icon-item class="iconItem">
+                <iron-icon class="grayIcon" icon="dashboard" slot="item-icon"></iron-icon>
+                <span>Option Name</span>
+            </paper-icon-item>
+
+        </app-header-layout>
+    </app-drawer>
+
+    <!--<app-header-layout>-->
+        <demo-app></demo-app>
+    <!--</app-header-layout>-->
+
+</app-drawer-layout>
+
+</body>
