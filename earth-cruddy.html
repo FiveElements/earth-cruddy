@@ -93,9 +93,7 @@ Custom property                                 | Description                  |
 
             paper-progress {
                 width: 100%;
-                /*--paper-progress-container: {*/
-                    /*z-index: 0;*/
-                /*}*/
+                /*--paper-progress-container-color: var(--earth-layout-header-background-scroll-color, var(--earth-layout-header-background-color, var(--primary-color)));*/
             }
 
             /*div[main-title] {*/
@@ -146,9 +144,12 @@ Custom property                                 | Description                  |
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
                     <div main-title>
-                    <!--<h4 id="condensedTitle" condensed-title>Contacts <i>&mdash; Summary</i></h4>-->
                         <slot name="title"></slot>
                     </div>
+                    <!--<div condensed-title>-->
+                        <!--<slot name="condensed-title"></slot>-->
+                    <!--</div>-->
+
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
                     <!--on-tap="newEntity"></paper-icon-button>-->
@@ -172,6 +173,9 @@ Custom property                                 | Description                  |
                         </div>
                     </earth-dropdown-trigger>
 
+                    <template is="dom-if" if="[[progress]]">
+                        <paper-progress bottom-item id="progress"   indeterminate="[[progress]]" bottom-item></paper-progress>
+                    </template>
                 </app-toolbar>
                 <!--<app-toolbar class="tall">-->
                     <!--<h1 id="mainTitle" main-title>Contact</h1>-->
@@ -209,18 +213,20 @@ Custom property                                 | Description                  |
 
         <!-- Notification -->
         <paper-dialog id="actions" modal>
-            <h2>Dismiss Modification</h2>
+            <h2>Dismiss Modification ?</h2>
             <div class="buttons">
-                <paper-button dialog-dismiss on-tap="closeForce">Dismiis</paper-button>
+                <paper-button dialog-dismiss on-tap="closeForce">Dismiss</paper-button>
                 <paper-button dialog-confirm autofocus on-tap="saveAndClose">Save</paper-button>
             </div>
         </paper-dialog>
 
-        <earth-toast-action id="toastUndoReset" text="Reset" action="Undo" fit-into="{{_toastFitInto()}}"
+        <earth-toast-action id="toastUndoReset" text="Reset" action="Undo"
+                            fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="restoreResetSnapshot">
         </earth-toast-action>
 
-        <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save" fit-into="{{_toastFitInto()}}"
+        <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save"
+                            fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="saveAndClose">
         </earth-toast-action>
     </template>
@@ -309,6 +315,14 @@ Custom property                                 | Description                  |
 //                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
             }
 
+//            _bindWithAirCruddy() {
+//                const cruddyElts = this._getAirCrudyNodes('airCruddyElements');
+//                if (cruddyElts && cruddyElts.length >0) {
+//                    cruddyElts.map(elt => {
+//                        // TODO  this.linkPaths('route.__queryParams', 'tail.__queryParams');
+//                    });
+//                }
+//            }
 
             // --- Config Target
             // --- ---------------------------
