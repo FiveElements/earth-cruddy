@@ -216,11 +216,11 @@ Custom property                                 | Description                  |
             </div>
         </paper-dialog>
 
-        <earth-toast-action id="toastUndoReset" text="Reset" action="Undo"
+        <earth-toast-action id="toastUndoReset" text="Reset" action="Undo" fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="restoreResetSnapshot">
         </earth-toast-action>
 
-        <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save"
+        <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save" fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="saveAndClose">
         </earth-toast-action>
     </template>
@@ -292,11 +292,23 @@ Custom property                                 | Description                  |
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
-//            ready() {
-//                super.ready();
+            ready() {
+                super.ready();
+                // Dialog open behing app-header-layout
+                // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
+                document.body.appendChild(this.$.actions);
+                // Test
 //                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
 //                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
-//            }
+            }
+
+
+            // --- Config Target
+            // --- ---------------------------
+            _toastFitInto() {
+                return this.$.headerLayout;
+            }
+
 
             // --- Key Bindings
             // --- ---------------------------
@@ -400,8 +412,6 @@ Custom property                                 | Description                  |
             // --- Actions
             // --- ---------------------------
             openDialogSaveOrDismiss() {
-                // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
-                document.body.appendChild(this.$.actions);
                 this.$.actions.open();
             }
 
@@ -409,12 +419,10 @@ Custom property                                 | Description                  |
             // --- ---------------------------
 
             openToastUndoReset() {
-                this.$.toastUndoReset.fitInto = this.$.headerLayout;
                 this.$.toastUndoReset.open();
             }
 
             openToastSaveOrDismiss() {
-                this.$.toastSaveOrDismiss.fitInto = this.$.headerLayout;
                 this.$.toastSaveOrDismiss.open();
             }
 
