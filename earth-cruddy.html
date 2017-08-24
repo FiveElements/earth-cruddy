@@ -421,13 +421,14 @@ Custom property                                 | Description                  |
 
             // --- Cruddy Locator
             // --- ---------------------------
+            _getContentNode() {
+                return  this.$.content ||  this.shadowRoot.querySelector('#content');
+            }
 
             _getAirCrudyNodes(funcName) {
                 if (!this._cruddyElements) {
-//                   console.log('_getAirCrudyNodes : content= ', this.$.content);
-//                   console.log('_getAirCrudyNodes : this.shadowRoot.querySelector content= ', this.shadowRoot.querySelector('#content'));
                     this.logDebug('_getAirCrudyNodes : ', this.$.content);
-                    const contentNode = this.$.content ||  this.shadowRoot.querySelector('#content');
+                    const contentNode = this._getContentNode();
                     const crudies = this._computeFilterNodes(contentNode, (node) => {
                         let isValid = false;
                         if (node[funcName]) {
