@@ -93,20 +93,18 @@ Custom property                                 | Description                  |
 
             paper-progress {
                 width: 100%;
-                /*--paper-progress-container: {*/
-                    /*z-index: 0;*/
-                /*}*/
+                /*--paper-progress-container-color: var(--earth-layout-header-background-scroll-color, var(--earth-layout-header-background-color, var(--primary-color)));*/
             }
 
-            /*div[main-title] {*/
-            /*pointer-events: none;*/
-            /*@apply --layout-flex;*/
-            /*}*/
-
-            :host ::slotted([slot=title]) {
-                @apply --layout-flex;
+            div[main-title] {
+                @apply (--layout-flex);
                 @apply (--paper-font-title);
             }
+
+            /*:host ::slotted([slot=title]) {*/
+                /*@apply (--layout-flex);*/
+                /*@apply (--paper-font-title);*/
+            /*}*/
 
             :host ::slotted([slot=content]) {
                 @apply (--paper-font-body1);
@@ -114,8 +112,8 @@ Custom property                                 | Description                  |
             }
 
             paper-toast {
-                @apply --layout-horizontal;
-                @apply --layout-center;
+                @apply (--layout-horizontal);
+                @apply (--layout-center);
             }
 
             .toast-button {
@@ -145,10 +143,9 @@ Custom property                                 | Description                  |
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
                     <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
-                    <div main-title>
-                    <!--<h4 id="condensedTitle" condensed-title>Contacts <i>&mdash; Summary</i></h4>-->
-                        <slot name="title"></slot>
-                    </div>
+                    <div main-title>[[mainTitle]]</div>
+                    <!--<div condensed-title>[[condensed-title]]</div>-->
+
                     <slot name="header-icon"></slot>
                     <!--<paper-icon-button icon="icons:create-new-folder"  title="save"-->
                     <!--on-tap="newEntity"></paper-icon-button>-->
@@ -157,9 +154,8 @@ Custom property                                 | Description                  |
 
                     <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
                                        on-tap="reset"></paper-icon-button>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="save"
-                                       on-tap="save">
-                    </paper-icon-button>
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="Save"
+                                       on-tap="save"></paper-icon-button>
                     <!--<paper-button on-tap="save">Save</paper-button>-->
                     <!-- More menu -->
                     <earth-dropdown-trigger>
@@ -172,6 +168,9 @@ Custom property                                 | Description                  |
                         </div>
                     </earth-dropdown-trigger>
 
+                    <template is="dom-if" if="[[progress]]">
+                        <paper-progress bottom-item id="progress"   indeterminate="[[progress]]" bottom-item></paper-progress>
+                    </template>
                 </app-toolbar>
                 <!--<app-toolbar class="tall">-->
                     <!--<h1 id="mainTitle" main-title>Contact</h1>-->
@@ -190,9 +189,9 @@ Custom property                                 | Description                  |
             </app-header>
             <div>
 
-                <template is="dom-if" if="[[status.tracing.error]]">
+                <template is="dom-if" if="[[lastResponse.error]]">
                     <slot id="error" name="error">
-                        <h1>Error [[status.tracing.error.status]]</h1>
+                        <h1>Error [[lastResponse.error.status]]</h1>
                     </slot>
                 </template>
 
@@ -209,18 +208,20 @@ Custom property                                 | Description                  |
 
         <!-- Notification -->
         <paper-dialog id="actions" modal>
-            <h2>Dismiss Modification</h2>
+            <h2>Dismiss Modification ?</h2>
             <div class="buttons">
-                <paper-button dialog-dismiss on-tap="closeForce">Dismiis</paper-button>
+                <paper-button dialog-dismiss on-tap="closeForce">Dismiss</paper-button>
                 <paper-button dialog-confirm autofocus on-tap="saveAndClose">Save</paper-button>
             </div>
         </paper-dialog>
 
         <earth-toast-action id="toastUndoReset" text="Reset" action="Undo"
+                            fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="restoreResetSnapshot">
         </earth-toast-action>
 
         <earth-toast-action id="toastSaveOrDismiss" text="Dismiss modification" action="Save"
+                            fit-into="{{_toastFitInto()}}"
                             on-earth-toast-confirm="saveAndClose">
         </earth-toast-action>
     </template>
@@ -241,14 +242,24 @@ Custom property                                 | Description                  |
                     isData: {
                         type: Boolean,
                         value: true,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The air cruddy status
                      */
                     status: {
                         type: Object,
-                        notify: true
+                        notify: true,
+                        readonly: true
+                    },
+                    /**
+                     * The air cruddy last response
+                     */
+                    lastResponse: {
+                        type: Object,
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The progess is running
@@ -256,7 +267,8 @@ Custom property                                 | Description                  |
                     progress: {
                         type: Boolean,
                         value: false,
-                        notify: true
+                        notify: true,
+                        readonly: true
                     },
                     /**
                      * The progress min time in ms.
@@ -264,7 +276,17 @@ Custom property                                 | Description                  |
                     progressMinMs: {
                         type: Number,
                         value: 300
-                    }
+                    },
+                    /**
+                     * The Title
+                     */
+                    mainTitle: {
+                        type: String
+                    },
+                    condensedTitle: {
+                        type: String
+                    },
+
                 };
             }
 
@@ -292,11 +314,28 @@ Custom property                                 | Description                  |
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
             }
 
-//            ready() {
-//                super.ready();
-//                this.$.condensedTitle.textContent = 'Lorem ipsum dolor sit amet';
-//                this.$.mainTitle.textContent = 'Lorem ipsum dolor sit amet';
+            ready() {
+                super.ready();
+                // Dialog open behing app-header-layout
+                // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
+                document.body.appendChild(this.$.actions);
+            }
+
+//            _bindWithAirCruddy() {
+//                const cruddyElts = this._getAirCrudyNodes('airCruddyElements');
+//                if (cruddyElts && cruddyElts.length >0) {
+//                    cruddyElts.map(elt => {
+//                        // TODO  this.linkPaths('route.__queryParams', 'tail.__queryParams');
+//                    });
+//                }
 //            }
+
+            // --- Config Target
+            // --- ---------------------------
+            _toastFitInto() {
+                return this.$.headerLayout;
+            }
+
 
             // --- Key Bindings
             // --- ---------------------------
@@ -358,8 +397,9 @@ Custom property                                 | Description                  |
             }
 
             _handleRequestResponse(e) {
-//                console.log('--- Handle cruddy response', e);
                 const detail = e.detail;
+//                console.log('--- Handle cruddy response', e, detail);
+                this.lastResponse = detail;
                 this._handleStatusEffects(detail.info);
             }
 
@@ -400,8 +440,6 @@ Custom property                                 | Description                  |
             // --- Actions
             // --- ---------------------------
             openDialogSaveOrDismiss() {
-                // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
-                document.body.appendChild(this.$.actions);
                 this.$.actions.open();
             }
 
@@ -409,12 +447,10 @@ Custom property                                 | Description                  |
             // --- ---------------------------
 
             openToastUndoReset() {
-                this.$.toastUndoReset.fitInto = this.$.headerLayout;
                 this.$.toastUndoReset.open();
             }
 
             openToastSaveOrDismiss() {
-                this.$.toastSaveOrDismiss.fitInto = this.$.headerLayout;
                 this.$.toastSaveOrDismiss.open();
             }
 
@@ -533,7 +569,7 @@ Custom property                                 | Description                  |
                     action
                 };
                 this.logDebug('Fire event earth-layout-close');
-                console.log('------------- Fire event earth-layout-close -------------');
+//                console.log('------------- Fire event earth-layout-close -------------');
                 this.dispatchEvent(new CustomEvent('earth-layout-close', {detail, bubbles: true, composed: true}));
                 return detail;
             }
@@ -660,7 +696,7 @@ Custom property                                 | Description                  |
              */
             _computeFilterNodes(parent, filter, levelToVisit = -1) {
                 const nodes = Array.prototype.slice.call(Polymer.FlattenedNodesObserver.getFlattenedNodes(parent));
-                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
+//                this.logDebug('parent : ', parent, ' -- level : ', levelToVisit, '-->', nodes);
                 const elements = nodes.reduce((acc, el) => {
                     // Exclude not wanted search
                     // ----------------------------
