@@ -25,7 +25,6 @@
     <custom-style>
         <style is="custom-style" include="demo-pages-shared-styles">
             paper-dialog {
-                background-color: tomato;
                 width: 600px;
                 height: 600px;
             }
@@ -34,18 +33,77 @@
     </custom-style>
 </head>
 <body>
+
+
+<dom-module id="my-element">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <slot></slot>
+    </template>
+
+
+    <!-- Uncomment for class syntax -->
+    <script>
+        HTMLImports.whenReady(function () {
+            class MyElement extends Polymer.Element {
+                static get is() {
+                    return 'my-element';
+                }
+
+                static get properties() {
+                    return {
+                        data: {
+                            type: Object,
+                            notify: true
+                        }
+                    }
+                }
+                // --- Life Cycle
+                // --- ---------------------------
+                constructor() {
+                    super();
+                    this._boundListenerPageEventChanged = this._handlePageEventChanged.bind(this);
+                }
+
+                connectedCallback() {
+                    super.connectedCallback();
+                    this.addEventListener('earth-layout-close', this._boundListenerPageEventChanged);
+                }
+
+                disconnectedCallback() {
+                    super.disconnectedCallback();
+                    this.removeEventListener('earth-layout-close', this._boundListenerPageEventChanged);
+                }
+
+                _handlePageEventChanged(e){
+                    console.log('Page change Event', e.detail);
+                    document.getElementById("dialog").close();
+                }
+            }
+
+            customElements.define(MyElement.is, MyElement);
+        });
+
+    </script>
+
+</dom-module>
+
 <div class="vertical-section-container centered">
     <h3>Basic earth-cruddy demo</h3>
     <demo-snippet>
         <dom-bind>
         <template>
             <paper-button onclick="dialog.open()">Dialog</paper-button>
+            <my-element>
 
             <paper-dialog id="dialog" >
-                <earth-cruddy status="{{status}}">
-                    <div slot="title">Lorem ipsum dolor sit amet,</div>
+                <!--<paper-dialog-scrollable>-->
+                <earth-cruddy status="{{status}}" main-title="Lorem ipsum dolor sit amet,">
                     <div slot="content">
-                        <!--<paper-dialog-scrollable>-->
                         <air-cruddy-elasticsearch id="cruddy" data="{{data}}" url="http://localhost:9200/5elements/5elements"
                                                   entity-id="1" debug auto-save>
                             <!--<div>id : [[data.id]]</div>-->
@@ -53,12 +111,13 @@
                             <paper-input label="Lastname" value="{{data.lastname}}" required></paper-input>
                             <paper-input label="Age" value="{{data.age}}" ></paper-input>
                         </air-cruddy-elasticsearch>
-                        <!--<sample-content size="10"></sample-content>-->
-                        <!--</paper-dialog-scrollable>-->
+                        <sample-content size="10"></sample-content>
+
                     </div>
                 </earth-cruddy>
+                <!--</paper-dialog-scrollable>-->
             </paper-dialog>
-
+            </my-element>
         </template>
         </dom-bind>
     </demo-snippet>

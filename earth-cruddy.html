@@ -276,6 +276,9 @@ Custom property                                 | Description                  |
                         type: Number,
                         value: 300
                     },
+                    toastFitInto: {
+                        type: Object
+                    },
                     /**
                      * The Title
                      */
@@ -293,13 +296,13 @@ Custom property                                 | Description                  |
             // --- ---------------------------
             constructor() {
                 super();
-                this._boundListenerStatusChanged = this._handleStatusChanged.bind(this);
+                this._boundListenerPageEventChanged = this._handleStatusChanged.bind(this);
                 this._boundListenerRequestResponse = this._handleRequestResponse.bind(this);
             }
 
             connectedCallback() {
                 super.connectedCallback();
-                this.addEventListener('air-cruddy-status', this._boundListenerStatusChanged);
+                this.addEventListener('air-cruddy-status', this._boundListenerPageEventChanged);
                 this.addEventListener('air-cruddy-request', this._boundListenerRequestResponse);
                 this.addEventListener('air-cruddy-response', this._boundListenerRequestResponse);
                 this.addEventListener('air-cruddy-error', this._boundListenerRequestResponse);
@@ -307,7 +310,7 @@ Custom property                                 | Description                  |
 
             disconnectedCallback() {
                 super.disconnectedCallback();
-                this.removeEventListener('air-cruddy-status', this._boundListenerStatusChanged);
+                this.removeEventListener('air-cruddy-status', this._boundListenerPageEventChanged);
                 this.removeEventListener('air-cruddy-request', this._boundListenerRequestResponse);
                 this.removeEventListener('air-cruddy-response', this._boundListenerRequestResponse);
                 this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
@@ -332,7 +335,7 @@ Custom property                                 | Description                  |
             // --- Config Target
             // --- ---------------------------
             _toastFitInto() {
-                return this.$.headerLayout;
+                return this.toastFitInto ||  this.$.headerLayout;
             }
 
 
