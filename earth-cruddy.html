@@ -297,23 +297,25 @@ Custom property                                 | Description                  |
             constructor() {
                 super();
                 this._boundListenerPageEventChanged = this._handleStatusChanged.bind(this);
-                this._boundListenerRequestResponse = this._handleRequestResponse.bind(this);
+                this._boundListenerAirCruddyRequest = this._handleAirCruddyRequest.bind(this);
+                this._boundListenerAirCruddyResponse = this._handleAirCruddyResponse.bind(this);
+                this._boundListenerAirCruddyError = this._handleAirCruddyError.bind(this);
             }
 
             connectedCallback() {
                 super.connectedCallback();
                 this.addEventListener('air-cruddy-status', this._boundListenerPageEventChanged);
-                this.addEventListener('air-cruddy-request', this._boundListenerRequestResponse);
-                this.addEventListener('air-cruddy-response', this._boundListenerRequestResponse);
-                this.addEventListener('air-cruddy-error', this._boundListenerRequestResponse);
+                this.addEventListener('air-cruddy-request', this._boundListenerAirCruddyRequest);
+                this.addEventListener('air-cruddy-response', this._boundListenerAirCruddyResponse);
+                this.addEventListener('air-cruddy-error', this._boundListenerAirCruddyError);
             }
 
             disconnectedCallback() {
                 super.disconnectedCallback();
                 this.removeEventListener('air-cruddy-status', this._boundListenerPageEventChanged);
-                this.removeEventListener('air-cruddy-request', this._boundListenerRequestResponse);
-                this.removeEventListener('air-cruddy-response', this._boundListenerRequestResponse);
-                this.removeEventListener('air-cruddy-error', this._boundListenerRequestResponse);
+                this.removeEventListener('air-cruddy-request', this._boundListenerAirCruddyRequest);
+                this.removeEventListener('air-cruddy-response', this._boundListenerAirCruddyResponse);
+                this.removeEventListener('air-cruddy-error', this._boundListenerAirCruddyError);
             }
 
             ready() {
@@ -395,15 +397,27 @@ Custom property                                 | Description                  |
                 const status = detail.status;
                 this.status = status;
                 this._handleStatusIsData(status);
-
             }
 
-            _handleRequestResponse(e) {
+            _handleAirCruddyRequest(e) {
                 const detail = e.detail;
-//                console.log('--- Handle cruddy response', e, detail);
-                this.lastResponse = detail;
+                this.lastResponse = { request: detail};
                 this._handleStatusEffects(detail.info);
             }
+
+            _handleAirCruddyResponse(e) {
+                const detail = e.detail;
+                this.lastResponse = Object.assign({},  this.lastResponse,  {response: detail});
+                this._handleStatusEffects(detail.info);
+            }
+
+            _handleAirCruddyError(e) {
+                const detail = e.detail;
+                this.lastResponse = { error: detail} ;
+                this._handleStatusEffects(detail.info);
+            }
+
+
 
             _handleStatusIsData(status) {
                 if (status && (status.mode !== 'unset')) {
