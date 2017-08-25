@@ -190,7 +190,7 @@ Custom property                                 | Description                  |
 
                 <template is="dom-if" if="[[lastResponse.error]]">
                     <slot id="error" name="error">
-                        <h1>Error [[lastResponse.error.status]]</h1>
+                        <h1>Error [[lastResponse.error.status]] : [[lastResponse.error.message]]</h1>
                     </slot>
                 </template>
 
