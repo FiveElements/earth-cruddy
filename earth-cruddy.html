@@ -26,6 +26,9 @@
 <link rel="import" href="../app-layout/app-scroll-effects/app-scroll-effects.html">
 
 
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
+
+
 <link rel="import" href="earth-dropdown-trigger.html">
 <link rel="import" href="earth-dropdown-item.html">
 
@@ -141,7 +144,7 @@ Custom property                                 | Description                  |
             <app-header slot="header" condenses fixed effects="resize-title blend-background waterfall">
                 <!-- @see https://github.com/PolymerElements/app-layout/blob/master/demo/demo4.html -->
                 <app-toolbar>
-                    <paper-icon-button icon="icons:arrow-back" on-tap="close"></paper-icon-button>
+                    <paper-icon-button icon="icons:arrow-back" on-tap="close" title="Close (Ctrl+K)"></paper-icon-button>
                     <div main-title>[[mainTitle]]</div>
                     <!--<div condensed-title>[[condensed-title]]</div>-->
 
@@ -151,9 +154,9 @@ Custom property                                 | Description                  |
                     <!--<paper-icon-button icon="icons:autorenew" disabled$="[[!status.isDirty]]" title="Reload"-->
                     <!--on-tap="reload"></paper-icon-button>-->
 
-                    <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset"
+                    <paper-icon-button icon="icons:clear" disabled$="[[!status.isDirty]]" title="Reset (Ctrl+Z)"
                                        on-tap="reset"></paper-icon-button>
-                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="Save"
+                    <paper-icon-button icon="icons:check" disabled$="[[!status.isDirty]]" title="[[localize('save')]] (Ctrl+S)"
                                        on-tap="save"></paper-icon-button>
                     <!--<paper-button on-tap="save">Save</paper-button>-->
                     <!-- More menu -->
@@ -161,7 +164,7 @@ Custom property                                 | Description                  |
                         <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
                         <div slot="dropdown-content">
                             <earth-dropdown-item on-tap="delete" icon="delete" disabled="[[!isData]]">
-                                Delete
+                                [[localize('delete')]]
                             </earth-dropdown-item>
                             <slot name="dropdown"></slot>
                         </div>
@@ -209,8 +212,8 @@ Custom property                                 | Description                  |
         <paper-dialog id="actions" modal>
             <h2>Dismiss Modification ?</h2>
             <div class="buttons">
-                <paper-button dialog-dismiss on-tap="closeForce">Dismiss</paper-button>
-                <paper-button dialog-confirm autofocus on-tap="saveAndClose">Save</paper-button>
+                <paper-button dialog-dismiss on-tap="closeForce">[[localize('dismiss')]]</paper-button>
+                <paper-button dialog-confirm autofocus on-tap="saveAndClose">[[localize('save')]]</paper-button>
             </div>
         </paper-dialog>
 
@@ -226,7 +229,7 @@ Custom property                                 | Description                  |
     </template>
 
     <script>
-        class EarthCruddy extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.Element) {
+        class EarthCruddy extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior,  Polymer.AppLocalizeBehavior], Polymer.Element) {
             static get is() {
                 return 'earth-cruddy';
             }
@@ -234,6 +237,23 @@ Custom property                                 | Description                  |
 
             static get properties() {
                 return {
+                    /**
+                     * I18n
+                     */
+                    language: {
+                        value: function () {
+                            return window.navigator.language;
+                        },
+                        type: String
+                    },
+                    languageFilePath: {
+                        type: String,
+                        value: 'locales.json'
+                    },
+                    /**
+                     * Config
+                     */
+
                     debug: {
                         type: Boolean,
                         value: true
@@ -323,6 +343,8 @@ Custom property                                 | Description                  |
                 // Dialog open behing app-header-layout
                 // Workaround https://github.com/PolymerElements/paper-dialog/issues/152
                 document.body.appendChild(this.$.actions);
+                // Load resources
+                this.loadResources(this.resolveUrl(this.languageFilePath));
             }
 
 //            _bindWithAirCruddy() {
