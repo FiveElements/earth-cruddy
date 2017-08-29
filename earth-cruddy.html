@@ -250,10 +250,11 @@ Custom property                                 | Description                  |
                         value: ['fr', 'en']
                     },
                     language: {
+                        type: String,
                         value: function () {
                             return this._computeSupportedLanguage( window.navigator.language);
-                        },
-                        type: String
+                        }
+
                     },
                     languageFilePath: {
                         type: String,
