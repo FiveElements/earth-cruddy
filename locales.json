@@ -5,9 +5,7 @@
     "dismiss_modif": "Dismiss modifications",
     "dismiss": "dismiss",
     "redo": "Redo",
-    "close": "Close",
-    "fruit": "{num, plural, =0 {no apples} =1 {one apple} other {# apples}}",
-    "bananas": "{name} ate {num, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other {at their house.}}"
+    "close": "Close"
   },
   "fr": {
     "save": "Sauvegarder",
@@ -15,7 +13,6 @@
     "dismiss_modif": "Abandonner les modifications",
     "dismiss": "Abandonner",
     "redo": "Refaire",
-    "close": "Fermer",
-    "fruit": "{num, plural, =0 {pas de pommes} =1 {une pomme} other {# pommes}}",
+    "close": "Fermer"
   }
 }
