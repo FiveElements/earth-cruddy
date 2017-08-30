@@ -193,9 +193,11 @@ Custom property                                 | Description                  |
             <div>
 
                 <template is="dom-if" if="[[lastResponse.error]]">
-                    <slot id="error" name="error">
-                        <h1>Error [[lastResponse.error.status]] : [[lastResponse.error.message]]</h1>
-                    </slot>
+                    <div>
+                        <slot id="error" name="error">
+                            <h1>Error [[lastResponse.error.status]] : [[lastResponse.error.message]]</h1>
+                        </slot>
+                    </div>
                 </template>
 
 
