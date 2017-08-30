@@ -29,6 +29,9 @@
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
 
 
+<link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+
 <link rel="import" href="earth-dropdown-trigger.html">
 <link rel="import" href="earth-dropdown-item.html">
 
@@ -93,6 +96,7 @@ Custom property                                 | Description                  |
             app-header paper-icon-button {
                 --paper-icon-button-ink-color: var(--earth-layout-header-text-color, var(--dark-theme-text-color));
             }
+
 
             paper-progress {
                 width: 100%;
@@ -160,15 +164,17 @@ Custom property                                 | Description                  |
                                        on-tap="save"></paper-icon-button>
                     <!--<paper-button on-tap="save">Save</paper-button>-->
                     <!-- More menu -->
-                    <earth-dropdown-trigger>
-                        <paper-icon-button slot="dropdown-trigger" icon="icons:more-vert"></paper-icon-button>
-                        <div slot="dropdown-content">
+                    <paper-menu-button   vertical-offset="50"  horizontal-align="right">
+                        <paper-icon-button icon="icons:more-vert" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+                        <paper-listbox slot="dropdown-content">
                             <earth-dropdown-item on-tap="delete" icon="delete" disabled="[[!isData]]">
                                 [[localize('delete')]]
                             </earth-dropdown-item>
                             <slot name="dropdown"></slot>
-                        </div>
-                    </earth-dropdown-trigger>
+                        </paper-listbox>
+                    </paper-menu-button>
+
+
 
                     <template is="dom-if" if="[[progress]]">
                         <paper-progress bottom-item id="progress"   indeterminate="[[progress]]" bottom-item></paper-progress>
