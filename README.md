@@ -35,6 +35,6 @@ curl -XPUT 'http://localhost:9200/5elements?pretty' -H 'Content-Type: applicatio
 ## Insert Data
 
 ```bash
-curl -XPUT 'http://localhost:9200/5elements/5elements/1?pretty' -d'{ "firstname" : "Liloo",  "lastname" : "Dallas" }'
+curl -XPUT 'http://localhost:9200/5elements/5elements/1?pretty'  -H 'Content-Type: application/json'  -d'{ "firstname" : "Liloo",  "lastname" : "Dallas" }'
 ```
  
